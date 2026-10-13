@@ -30,7 +30,7 @@ return {
 ```
 
 The available keys are `c`, `asm`, `rust`, `systemverilog`, `vhdl`, `python`, `go`, `bash` and `web`.
-Lua, JSON, YAML, TOML and Markdown are always on. If the file does not exist, every language is enabled.
+Lua, JSON, YAML, TOML and Markdown are always on. If the file does not exist, only C/C++, Assembly and SystemVerilog are enabled.
 
 The selection controls four things:
 

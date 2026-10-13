@@ -2,8 +2,9 @@
 
 # baremetal.nvim
 
-**A Neovim IDE for low-level and hardware work: C, C++, Assembly, Rust, SystemVerilog and VHDL.**
+**A batteries-included Neovim config for low-level and hardware work: C, C++, Assembly, Rust, SystemVerilog and VHDL.**
 
+"Baremetal" is about what you write with it (firmware, CPUs, bare-metal code), not about the config being minimal.
 Built on `lazy.nvim` and the native LSP API of Neovim 0.11+.
 Pick only the languages you need, and the installer sets up the rest.
 
@@ -18,7 +19,7 @@ Pick only the languages you need, and the installer sets up the rest.
 ## Features
 
 - **Language servers that work on first start.** Mason installs clangd, rust-analyzer, verible, vhdl_ls, asm-lsp and the rest automatically.
-- **Compile and run the current file with `<Space>rr`.** C/C++ builds with AddressSanitizer and UBSan, Rust uses `cargo run`, and Verilog testbenches run through Icarus.
+- **Compile and run the current file with `<Space>rr`.** C/C++ builds with AddressSanitizer and UBSan, Rust uses `cargo run`, and Verilog testbenches run through Icarus together with every `.sv`/`.v` file next to them (or the files listed in `verible.filelist`).
 - **Debugger.** codelldb and native GDB, including a remote GDB target for embedded boards (OpenOCD, QEMU).
 - **C/C++ projects.** CMake integration (configure, build, run, debug, CTest) generates `compile_commands.json` for clangd.
 - **HDL support.** The verible language server and formatter, plus a verilator linter that resolves modules across folders.
@@ -97,7 +98,7 @@ NVIM_APPNAME=baremetal nvim
 | Option | |
 |---|---|
 | `-l, --langs c,rust,python` | Choose languages without the menu (`all` for everything) |
-| `-y, --yes` | Non-interactive: yes to every question, all languages unless `--langs` is given |
+| `-y, --yes` | Non-interactive: yes to every question, default languages (C/C++, Assembly, SystemVerilog) unless `--langs` is given |
 | `--no-deps` | Do not install system packages |
 | `--no-sync` | Do not install plugins / tools now (it happens on the first start instead) |
 | `--appname NAME` | Install side by side as `NVIM_APPNAME=NAME` |
@@ -117,7 +118,7 @@ git clone https://github.com/krivanikm/baremetal.nvim.git ~/.config/nvim
 nvim
 ```
 
-Without the installer, every language is enabled. See [choosing languages](#languages) to narrow it down.
+Without the installer, only the default languages are enabled: C/C++, Assembly and SystemVerilog. See [choosing languages](#languages) to narrow it down.
 
 ## Languages
 
@@ -145,7 +146,7 @@ return {
 }
 ```
 
-To change the languages later, edit the file, restart Neovim and run `:Lazy sync`. Mason installs the new tools in the background. If the file does not exist, all languages are enabled.
+To change the languages later, edit the file, restart Neovim and run `:Lazy sync`. Mason installs the new tools in the background. If the file does not exist, only C/C++, Assembly and SystemVerilog are enabled.
 
 ### Project tips
 

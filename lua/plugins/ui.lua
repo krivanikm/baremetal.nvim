@@ -1,5 +1,5 @@
 return {
-  -- Ikony (mini.icons + shim pre pluginy čo chcú nvim-web-devicons)
+  -- Icons (mini.icons + a shim for plugins that want nvim-web-devicons)
   {
     "echasnovski/mini.icons",
     lazy = true,
@@ -12,7 +12,7 @@ return {
     end,
   },
 
-  -- Snacks: dashboard, picker (fuzzy finder), notifikácie, terminál, lazygit, indent čiary, ...
+  -- Snacks: dashboard, picker (fuzzy finder), notifications, terminal, lazygit, indent guides, ...
   {
     "folke/snacks.nvim",
     priority = 1000,
@@ -23,7 +23,7 @@ return {
       input = { enabled = true },
       indent = { enabled = true, animate = { enabled = false } },
       scope = { enabled = true },
-      words = { enabled = true }, -- highlight ostatných výskytov symbolu pod kurzorom
+      words = { enabled = true }, -- highlight other occurrences of the symbol under the cursor
       statuscolumn = { enabled = true },
       notifier = { enabled = true, timeout = 3000, style = "compact" },
       terminal = { win = { style = "terminal" } },
@@ -31,7 +31,7 @@ return {
       zen = { enabled = true },
       picker = {
         enabled = true,
-        ui_select = true, -- vim.ui.select cez picker
+        ui_select = true, -- vim.ui.select through the picker
         layout = { preset = "telescope" },
         matcher = { frecency = true },
         sources = {
@@ -57,7 +57,12 @@ return {
             { icon = "\u{f07c} ", key = "p", desc = "Projects", action = ":lua Snacks.picker.projects()" },
             { icon = "\u{f0c7} ", key = "s", desc = "Restore session", section = "session" },
             { icon = "\u{f19d} ", key = "T", desc = "Tutor", action = ":Tutor baremetal" },
-            { icon = "\u{f013} ", key = "c", desc = "Config", action = ":lua Snacks.picker.files({ cwd = vim.fn.stdpath('config') })" },
+            {
+              icon = "\u{f013} ",
+              key = "c",
+              desc = "Config",
+              action = ":lua Snacks.picker.files({ cwd = vim.fn.stdpath('config') })",
+            },
             { icon = "󰒲 ", key = "l", desc = "Lazy", action = ":Lazy" },
             { icon = "\u{f0ad} ", key = "m", desc = "Mason", action = ":Mason" },
             { icon = "\u{f426} ", key = "q", desc = "Quit", action = ":qa" },
@@ -66,7 +71,15 @@ return {
         sections = {
           { section = "header" },
           { section = "keys", gap = 1, padding = 1 },
-          { icon = "\u{f15c} ", title = "Recent files", section = "recent_files", cwd = true, limit = 6, indent = 2, padding = 1 },
+          {
+            icon = "\u{f15c} ",
+            title = "Recent files",
+            section = "recent_files",
+            cwd = true,
+            limit = 6,
+            indent = 2,
+            padding = 1,
+          },
           { section = "startup" },
         },
       },
@@ -126,7 +139,7 @@ return {
       vim.api.nvim_create_autocmd("User", {
         pattern = "VeryLazy",
         callback = function()
-          -- Toggly pod <leader>u
+          -- Toggles under <leader>u
           Snacks.toggle.option("spell", { name = "Spelling" }):map("<leader>us")
           Snacks.toggle.option("wrap", { name = "Wrap" }):map("<leader>uw")
           Snacks.toggle.option("relativenumber", { name = "Relative numbers" }):map("<leader>uL")
@@ -170,7 +183,10 @@ return {
           lualine_a = { { "mode", separator = { left = "\u{e0b6}" }, right_padding = 2 } },
           lualine_b = { "branch", "diff" },
           lualine_c = {
-            { "diagnostics", symbols = { error = "\u{f057} ", warn = "\u{f071} ", info = "\u{f05a} ", hint = "󰌵 " } },
+            {
+              "diagnostics",
+              symbols = { error = "\u{f057} ", warn = "\u{f071} ", info = "\u{f05a} ", hint = "󰌵 " },
+            },
             { "filetype", icon_only = true, separator = "", padding = { left = 1, right = 0 } },
             { "filename", path = 1, symbols = { modified = " ●", readonly = " \u{f023}" } },
           },
@@ -192,7 +208,7 @@ return {
     end,
   },
 
-  -- Taby buffrov hore
+  -- Buffer tabs at the top
   {
     "akinsho/bufferline.nvim",
     event = "VeryLazy",
@@ -220,7 +236,7 @@ return {
     },
   },
 
-  -- Which-key: popup so skratkami
+  -- Which-key: keymap popup
   {
     "folke/which-key.nvim",
     event = "VeryLazy",
@@ -252,10 +268,10 @@ return {
     },
   },
 
-  -- LSP progress v rohu
+  -- LSP progress in the corner
   { "j-hui/fidget.nvim", event = "LspAttach", opts = { notification = { window = { winblend = 0 } } } },
 
-  -- Krajšie markdown v editore
+  -- Nicer markdown in the editor
   {
     "MeanderingProgrammer/render-markdown.nvim",
     ft = { "markdown" },

@@ -1,17 +1,13 @@
-local function augroup(name)
-  return vim.api.nvim_create_augroup("ide_" .. name, { clear = true })
-end
+local function augroup(name) return vim.api.nvim_create_augroup("ide_" .. name, { clear = true }) end
 local au = vim.api.nvim_create_autocmd
 
--- Krátky highlight po yanku
+-- Briefly highlight yanked text
 au("TextYankPost", {
   group = augroup("yank"),
-  callback = function()
-    vim.hl.on_yank({ timeout = 150 })
-  end,
+  callback = function() vim.hl.on_yank({ timeout = 150 }) end,
 })
 
--- Návrat na poslednú pozíciu v súbore
+-- Return to the last cursor position in the file
 au("BufReadPost", {
   group = augroup("last_loc"),
   callback = function(ev)
@@ -27,7 +23,7 @@ au("BufReadPost", {
   end,
 })
 
--- Vyrovnaj splity pri zmene veľkosti terminálu
+-- Equalize splits when the terminal is resized
 au("VimResized", {
   group = augroup("resize"),
   callback = function()
@@ -37,7 +33,7 @@ au("VimResized", {
   end,
 })
 
--- Pomocné okná zatvárať cez q
+-- Close helper windows with q
 au("FileType", {
   group = augroup("close_q"),
   pattern = { "help", "qf", "man", "lspinfo", "checkhealth", "notify", "startuptime", "dap-float", "grug-far" },
@@ -47,7 +43,7 @@ au("FileType", {
   end,
 })
 
--- Text súbory: wrap + spell
+-- Text files: wrap + spell
 au("FileType", {
   group = augroup("wrap_spell"),
   pattern = { "text", "plaintex", "typst", "gitcommit", "markdown" },
@@ -57,7 +53,7 @@ au("FileType", {
   end,
 })
 
--- Odsadenie podľa jazyka (guess-indent to aj tak prepíše podľa obsahu súboru)
+-- Per-language indentation (guess-indent overrides it based on file contents)
 au("FileType", {
   group = augroup("indent"),
   pattern = { "lua", "verilog", "systemverilog", "json", "yaml", "toml", "html", "css", "javascript", "typescript" },
@@ -77,7 +73,7 @@ au("FileType", {
   end,
 })
 
--- Pri ukladaní vytvor chýbajúce adresáre
+-- Create missing directories on save
 au("BufWritePre", {
   group = augroup("auto_mkdir"),
   callback = function(ev)
@@ -89,7 +85,7 @@ au("BufWritePre", {
   end,
 })
 
--- Reload súboru ak sa zmenil mimo nvim
+-- Reload the file if it changed outside nvim
 au({ "FocusGained", "TermClose", "TermLeave" }, {
   group = augroup("checktime"),
   callback = function()

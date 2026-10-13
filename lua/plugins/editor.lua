@@ -1,5 +1,5 @@
 return {
-  -- File explorer (strom)
+  -- File explorer (tree)
   {
     "nvim-neo-tree/neo-tree.nvim",
     branch = "v3.x",
@@ -26,9 +26,7 @@ return {
           ["h"] = "close_node",
           ["<space>"] = "none",
           ["Y"] = {
-            function(state)
-              vim.fn.setreg("+", state.tree:get_node():get_id())
-            end,
+            function(state) vim.fn.setreg("+", state.tree:get_node():get_id()) end,
             desc = "Copy path",
           },
         },
@@ -42,7 +40,7 @@ return {
     },
   },
 
-  -- Oil: edituj adresár ako buffer (premenovanie/mazanie súborov textom)
+  -- Oil: edit a directory as a buffer (rename/delete files as text)
   {
     "stevearc/oil.nvim",
     cmd = "Oil",
@@ -50,7 +48,7 @@ return {
     opts = { view_options = { show_hidden = true }, float = { padding = 4 } },
   },
 
-  -- Flash: skoky po obrazovke (s + 2 znaky)
+  -- Flash: jump around the screen (s + 2 characters)
   {
     "folke/flash.nvim",
     event = "VeryLazy",
@@ -63,7 +61,7 @@ return {
     },
   },
 
-  -- Auto-páry zátvoriek
+  -- Auto-pair brackets
   { "echasnovski/mini.pairs", event = "InsertEnter", opts = { modes = { insert = true, command = false } } },
 
   -- Surround: gsa (add), gsd (delete), gsr (replace)
@@ -72,16 +70,21 @@ return {
     event = "VeryLazy",
     opts = {
       mappings = {
-        add = "gsa", delete = "gsd", find = "gsf", find_left = "gsF",
-        highlight = "gsh", replace = "gsr", update_n_lines = "gsn",
+        add = "gsa",
+        delete = "gsd",
+        find = "gsf",
+        find_left = "gsF",
+        highlight = "gsh",
+        replace = "gsr",
+        update_n_lines = "gsn",
       },
     },
   },
 
-  -- Automatická detekcia odsadenia podľa obsahu súboru
+  -- Detect indentation from file contents
   { "NMAC427/guess-indent.nvim", event = "BufReadPre", opts = {} },
 
-  -- TODO/FIXME/HACK/NOTE zvýraznenie
+  -- TODO/FIXME/HACK/NOTE highlighting
   {
     "folke/todo-comments.nvim",
     event = "BufReadPost",
@@ -93,7 +96,7 @@ return {
     },
   },
 
-  -- Trouble: pekný zoznam diagnostiky, referencií, symbolov
+  -- Trouble: a nice list of diagnostics, references, symbols
   {
     "folke/trouble.nvim",
     cmd = "Trouble",
@@ -108,7 +111,7 @@ return {
     },
   },
 
-  -- Outline / štruktúra súboru (funkcie, struct-y, moduly)
+  -- Outline / file structure (functions, structs, modules)
   {
     "stevearc/aerial.nvim",
     event = "LspAttach",
@@ -124,7 +127,7 @@ return {
     },
   },
 
-  -- Hľadaj & nahraď v celom projekte
+  -- Search & replace across the whole project
   {
     "MagicDuck/grug-far.nvim",
     cmd = "GrugFar",
@@ -145,7 +148,7 @@ return {
     },
   },
 
-  -- Sessions: automaticky ukladá otvorené súbory per adresár
+  -- Sessions: automatically saves open files per directory
   {
     "folke/persistence.nvim",
     event = "BufReadPre",
@@ -158,10 +161,14 @@ return {
     },
   },
 
-  -- Undo strom
-  { "mbbill/undotree", cmd = "UndotreeToggle", keys = { { "<leader>U", "<cmd>UndotreeToggle<cr>", desc = "Undotree" } } },
+  -- Undo tree
+  {
+    "mbbill/undotree",
+    cmd = "UndotreeToggle",
+    keys = { { "<leader>U", "<cmd>UndotreeToggle<cr>", desc = "Undotree" } },
+  },
 
-  -- Harpoon: rýchle prepínanie medzi 4-5 hlavnými súbormi projektu
+  -- Harpoon: quick switching between the 4-5 main files of a project
   {
     "ThePrimeagen/harpoon",
     branch = "harpoon2",

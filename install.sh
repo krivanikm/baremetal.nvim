@@ -11,6 +11,7 @@ LANGS_ARG=""
 MIN_NVIM="0.11.0"
 
 ALL_LANGS=(c asm rust systemverilog vhdl python go bash web)
+DEFAULT_LANGS=(c asm systemverilog)
 declare -A LANG_DESC=(
   [c]="C / C++ / CUDA + CMake      clangd, clang-format, codelldb"
   [asm]="Assembly (GAS / NASM)       asm-lsp"
@@ -48,8 +49,8 @@ Options:
   -l, --langs LIST     Languages to set up, comma separated, or "all"
                        (${ALL_LANGS[*]})
                        Without this flag you get an interactive menu.
-  -y, --yes            Do not ask, answer yes to everything (all languages
-                       unless --langs is given)
+  -y, --yes            Do not ask, answer yes to everything (default
+                       languages: ${DEFAULT_LANGS[*]}, unless --langs is given)
       --no-deps        Skip installing system packages
       --no-sync        Skip headless plugin / tool installation
       --appname NAME   Install as NVIM_APPNAME=NAME (default: ${APPNAME})
@@ -126,7 +127,7 @@ parse_langs() {
 
 menu_langs() {
   local i l input n
-  for l in "${ALL_LANGS[@]}"; do SELECTED[$l]=1; done
+  for l in "${DEFAULT_LANGS[@]}"; do SELECTED[$l]=1; done
   while true; do
     printf '\n%sWhich languages do you want?%s %s(Lua, JSON, YAML, TOML and Markdown are always included)%s\n\n' "$BOLD" "$RESET" "$DIM" "$RESET" >/dev/tty
     i=1
@@ -168,7 +169,7 @@ choose_langs() {
   if [[ -n "$LANGS_ARG" ]]; then
     parse_langs "$LANGS_ARG"
   elif [[ $ASSUME_YES -eq 1 ]] || ! has_tty; then
-    parse_langs all
+    parse_langs "$(IFS=,; printf '%s' "${DEFAULT_LANGS[*]}")"
   else
     menu_langs
   fi

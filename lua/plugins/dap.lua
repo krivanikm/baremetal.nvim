@@ -1,9 +1,9 @@
--- Debugger (DAP): codelldb (C/C++/Rust/ASM) a natívny GDB DAP (gdb >= 14).
--- Projekt môže mať aj .vscode/launch.json – nvim-dap ho načíta automaticky.
+-- Debugger (DAP): codelldb (C/C++/Rust/ASM) and the native GDB DAP (gdb >= 14).
+-- A project can also have .vscode/launch.json – nvim-dap loads it automatically.
 local function pick_program()
   return coroutine.create(function(co)
     local cwd = vim.fn.getcwd()
-    -- ponúkni spustiteľné súbory z build adresárov
+    -- offer executables from build directories
     Snacks.picker.files({
       title = "Pick a binary to debug",
       cmd = "fd",
@@ -17,9 +17,7 @@ local function pick_program()
   end)
 end
 
-local function input_program()
-  return vim.fn.input("Binary: ", vim.fn.getcwd() .. "/", "file")
-end
+local function input_program() return vim.fn.input("Binary: ", vim.fn.getcwd() .. "/", "file") end
 
 local function args()
   local a = vim.fn.input("Arguments: ")
@@ -41,8 +39,16 @@ return {
       { "<F12>", function() require("dap").step_out() end, desc = "Debug: Step out" },
       { "<F9>", function() require("dap").toggle_breakpoint() end, desc = "Debug: Breakpoint" },
       { "<leader>db", function() require("dap").toggle_breakpoint() end, desc = "Breakpoint" },
-      { "<leader>dB", function() require("dap").set_breakpoint(vim.fn.input("Condition: ")) end, desc = "Conditional breakpoint" },
-      { "<leader>dL", function() require("dap").set_breakpoint(nil, nil, vim.fn.input("Log: ")) end, desc = "Logpoint" },
+      {
+        "<leader>dB",
+        function() require("dap").set_breakpoint(vim.fn.input("Condition: ")) end,
+        desc = "Conditional breakpoint",
+      },
+      {
+        "<leader>dL",
+        function() require("dap").set_breakpoint(nil, nil, vim.fn.input("Log: ")) end,
+        desc = "Logpoint",
+      },
       { "<leader>dc", function() require("dap").continue() end, desc = "Continue/Start" },
       { "<leader>dC", function() require("dap").run_to_cursor() end, desc = "Run to cursor" },
       { "<leader>di", function() require("dap").step_into() end, desc = "Step into" },
@@ -56,14 +62,18 @@ return {
       { "<leader>dt", function() require("dap").terminate() end, desc = "Terminate" },
       { "<leader>du", function() require("dapui").toggle() end, desc = "Debug UI" },
       { "<leader>de", function() require("dapui").eval() end, desc = "Eval", mode = { "n", "x" } },
-      { "<leader>dw", function() require("dapui").elements.watches.add(vim.fn.expand("<cword>")) end, desc = "Add watch" },
+      {
+        "<leader>dw",
+        function() require("dapui").elements.watches.add(vim.fn.expand("<cword>")) end,
+        desc = "Add watch",
+      },
       { "<leader>dx", function() require("dap").clear_breakpoints() end, desc = "Clear breakpoints" },
       { "<leader>dd", function() require("dap").disassemble() end, desc = "Disassembly (if supported)" },
     },
     config = function()
       local dap, dapui = require("dap"), require("dapui")
 
-      -- Ikony
+      -- Icons
       vim.api.nvim_set_hl(0, "DapStoppedLine", { default = true, link = "Visual" })
       local signs = {
         DapBreakpoint = { "\u{f111}", "DiagnosticError" },
@@ -76,7 +86,7 @@ return {
         vim.fn.sign_define(name, { text = s[1], texthl = s[2], linehl = s[3], numhl = s[3] })
       end
 
-      -- Adaptéry
+      -- Adapters
       dap.adapters.codelldb = { type = "executable", command = "codelldb" }
       dap.adapters.gdb = {
         type = "executable",
@@ -117,7 +127,7 @@ return {
           pid = function() return require("dap.utils").pick_process() end,
         },
         {
-          -- napr. openocd / qemu -s -S (embedded, vlastné OS)
+          -- e.g. openocd / qemu -s -S (embedded, custom OS)
           name = "gdb: remote target (localhost:3333)",
           type = "gdb",
           request = "attach",
@@ -145,7 +155,11 @@ return {
             position = "left",
             size = 45,
           },
-          { elements = { { id = "repl", size = 0.5 }, { id = "console", size = 0.5 } }, position = "bottom", size = 12 },
+          {
+            elements = { { id = "repl", size = 0.5 }, { id = "console", size = 0.5 } },
+            position = "bottom",
+            size = 12,
+          },
         },
       })
       dap.listeners.after.event_initialized.dapui = function() dapui.open() end

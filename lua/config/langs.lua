@@ -1,8 +1,9 @@
 local M = {}
 
 M.all = { "c", "asm", "rust", "systemverilog", "vhdl", "python", "go", "bash", "web" }
+M.default = { "c", "asm", "systemverilog" }
 
-local selected = M.all
+local selected = M.default
 local user_file = vim.fn.stdpath("config") .. "/lua/custom/languages.lua"
 if vim.uv.fs_stat(user_file) then
   local user = require("custom.languages")

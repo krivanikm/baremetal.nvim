@@ -1,15 +1,15 @@
 -- ┌──────────────────────────────────────────────────────────┐
 -- │  baremetal.nvim — C / C++ / ASM / Rust / SystemVerilog / ...│
 -- └──────────────────────────────────────────────────────────┘
--- Poradie: options → keymaps → autocmds → lazy (pluginy) → runner
+-- Load order: options → keymaps → autocmds → lazy (plugins) → runner
 --
--- Štruktúra:
---   lua/config/options.lua   základné nastavenia vim.opt
---   lua/config/keymaps.lua   globálne skratky (nezávislé od pluginov)
---   lua/config/autocmds.lua  autocommandy
---   lua/config/lazy.lua      bootstrap lazy.nvim, načíta lua/plugins/*
---   lua/config/runner.lua    "skompiluj a spusti aktuálny súbor" (<leader>rr)
---   lua/plugins/*.lua        každý súbor vracia zoznam plugin špecifikácií
+-- Layout:
+--   lua/config/options.lua   basic vim.opt settings
+--   lua/config/keymaps.lua   global keymaps (independent of plugins)
+--   lua/config/autocmds.lua  autocommands
+--   lua/config/lazy.lua      bootstraps lazy.nvim, loads lua/plugins/*
+--   lua/config/runner.lua    "compile and run the current file" (<leader>rr)
+--   lua/plugins/*.lua        each file returns a list of plugin specs
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"

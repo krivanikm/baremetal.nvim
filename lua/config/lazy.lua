@@ -2,8 +2,12 @@
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.uv.fs_stat(lazypath) then
   local out = vim.fn.system({
-    "git", "clone", "--filter=blob:none", "--branch=stable",
-    "https://github.com/folke/lazy.nvim.git", lazypath,
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "--branch=stable",
+    "https://github.com/folke/lazy.nvim.git",
+    lazypath,
   })
   if vim.v.shell_error ~= 0 then
     vim.api.nvim_echo({ { "Failed to clone lazy.nvim:\n", "ErrorMsg" }, { out } }, true, {})
@@ -13,7 +17,7 @@ if not vim.uv.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-local spec = { { import = "plugins" } } -- každý súbor v lua/plugins/
+local spec = { { import = "plugins" } } -- every file in lua/plugins/
 if vim.uv.fs_stat(vim.fn.stdpath("config") .. "/lua/custom/plugins") then
   spec[#spec + 1] = { import = "custom.plugins" }
 end
@@ -22,8 +26,8 @@ require("lazy").setup({
   spec = spec,
   defaults = { lazy = false, version = false },
   install = { colorscheme = { "catppuccin", "habamax" } },
-  rocks = { enabled = false }, -- žiadny plugin nepotrebuje luarocks
-  checker = { enabled = true, notify = false }, -- ticho kontroluje updaty
+  rocks = { enabled = false }, -- no plugin needs luarocks
+  checker = { enabled = true, notify = false }, -- quietly checks for updates
   change_detection = { notify = false },
   ui = { border = "rounded" },
   performance = {

@@ -1,28 +1,60 @@
--- Rýchly "compile & run" pre aktuálny súbor (single-file programy, cvičenia, testbenche).
--- Pre projekty používaj Overseer (<leader>oo) alebo CMake (<leader>m...).
+-- Quick "compile & run" for the current file (single-file programs, exercises, testbenches).
+-- For projects use Overseer (<leader>oo) or CMake (<leader>m...).
 --
---   <leader>rr  skompiluj a spusti aktuálny súbor v termináli
---   <leader>rb  len skompiluj (chyby idú do quickfixu)
---   <leader>rd  skompiluj s -g a spusti debugger (DAP) na výsledku
+--   <leader>rr  compile and run the current file in a terminal
+--   <leader>rb  compile only (errors go to quickfix)
+--   <leader>rd  compile with -g and start the debugger (DAP) on the result
 
 local M = {}
 
 local out_dir = vim.fn.stdpath("cache") .. "/run"
 vim.fn.mkdir(out_dir, "p")
 
-local function q(s)
-  return vim.fn.shellescape(s)
+local function q(s) return vim.fn.shellescape(s) end
+
+local function hdl(file, bin)
+  local top = ""
+  for _, line in ipairs(vim.api.nvim_buf_get_lines(0, 0, -1, false)) do
+    local m = line:match("^%s*module%s+([%w_]+)")
+    if m then
+      top = "-s " .. q(m)
+      break
+    end
+  end
+  local root = vim.fs.root(file, { "verible.filelist", "files.f" })
+  if root then
+    local list = vim.uv.fs_stat(root .. "/verible.filelist") and "verible.filelist" or "files.f"
+    return {
+      build = ("iverilog -g2012 -Wall %s -o %s -c %s"):format(top, q(bin), q(list)),
+      run = "vvp " .. q(bin),
+      cwd = root,
+    }
+  end
+  local dir = vim.fn.fnamemodify(file, ":h")
+  local files = vim.fs.find(
+    function(name) return name:match("%.s?v$") ~= nil end,
+    { path = dir, type = "file", limit = math.huge }
+  )
+  local args = vim.tbl_map(q, files)
+  return {
+    build = ("iverilog -g2012 -Wall %s -o %s %s"):format(top, q(bin), table.concat(args, " ")),
+    run = "vvp " .. q(bin),
+  }
 end
 
--- Vráti { build = "...", run = "...", bin = "..." } pre daný filetype
+-- Returns { build = "...", run = "...", bin = "..." } for the current filetype
 local function recipe(file)
   local ft = vim.bo.filetype
   local name = vim.fn.fnamemodify(file, ":t:r")
   local bin = out_dir .. "/" .. name .. "-" .. vim.fn.sha256(file):sub(1, 8)
   local r = {
-    c = { build = ("gcc -std=c17 -g -O0 -Wall -Wextra -fsanitize=address,undefined %s -o %s -lm"):format(q(file), q(bin)) },
-    cpp = { build = ("g++ -std=c++23 -g -O0 -Wall -Wextra -fsanitize=address,undefined %s -o %s"):format(q(file), q(bin)) },
-    -- GAS: ak súbor definuje _start, linkuj bez libc startupu, inak cez main
+    c = {
+      build = ("gcc -std=c17 -g -O0 -Wall -Wextra -fsanitize=address,undefined %s -o %s -lm"):format(q(file), q(bin)),
+    },
+    cpp = {
+      build = ("g++ -std=c++23 -g -O0 -Wall -Wextra -fsanitize=address,undefined %s -o %s"):format(q(file), q(bin)),
+    },
+    -- GAS: if the file defines _start, link without libc startup, otherwise through main
     asm = {
       build = ("gcc -g -no-pie %s %s -o %s"):format(
         vim.fn.search("_start", "nw") > 0 and "-nostartfiles" or "",
@@ -35,15 +67,15 @@ local function recipe(file)
     python = { run = ("python3 %s"):format(q(file)) },
     lua = { run = ("lua %s"):format(q(file)) },
     sh = { run = ("bash %s"):format(q(file)) },
-    -- SystemVerilog/Verilog: Icarus (simulácia testbenchu), alternatíva: verilator --binary
-    systemverilog = { build = ("iverilog -g2012 -Wall -o %s %s"):format(q(bin), q(file)), run = "vvp " .. q(bin) },
-    verilog = { build = ("iverilog -g2005 -Wall -o %s %s"):format(q(bin), q(file)), run = "vvp " .. q(bin) },
   }
+  if ft == "systemverilog" or ft == "verilog" then
+    r[ft] = hdl(file, bin)
+  end
   local x = r[ft]
   if not x then
     return nil
   end
-  -- Cargo projekt => cargo run
+  -- Cargo project => cargo run
   if ft == "rust" and vim.fs.root(file, "Cargo.toml") then
     return { run = "cargo run", cwd = vim.fs.root(file, "Cargo.toml") }
   end
@@ -57,7 +89,7 @@ end
 local function term(cmd, cwd)
   Snacks.terminal.open(cmd, {
     cwd = cwd,
-    interactive = false, -- ostane otvorený po skončení, q zatvorí
+    interactive = false, -- stays open after it finishes, q closes it
     win = { position = "bottom", height = 0.35 },
   })
 end
@@ -73,7 +105,7 @@ function M.run()
   term({ "sh", "-c", cmd }, r.cwd or vim.fn.fnamemodify(file, ":h"))
 end
 
--- Synchronný build, výstup do quickfixu. Vráti cestu k binárke alebo nil.
+-- Synchronous build, output goes to quickfix. Returns the binary path or nil.
 function M.build()
   vim.cmd("silent! write")
   local file = vim.api.nvim_buf_get_name(0)
@@ -82,7 +114,7 @@ function M.build()
     vim.notify("Runner: this filetype has no build step", vim.log.levels.WARN)
     return nil
   end
-  local res = vim.system({ "sh", "-c", r.build }, { text = true }):wait()
+  local res = vim.system({ "sh", "-c", r.build }, { text = true, cwd = r.cwd or vim.fn.fnamemodify(file, ":h") }):wait()
   local output = (res.stdout or "") .. (res.stderr or "")
   vim.fn.setqflist({}, "r", { title = r.build, lines = vim.split(output, "\n", { trimempty = true }) })
   if res.code ~= 0 then
@@ -96,7 +128,10 @@ end
 
 function M.debug()
   if not pcall(require, "dap") then
-    return vim.notify("Runner: debugger is disabled (enable c, asm or rust in lua/custom/languages.lua)", vim.log.levels.WARN)
+    return vim.notify(
+      "Runner: debugger is disabled (enable c, asm or rust in lua/custom/languages.lua)",
+      vim.log.levels.WARN
+    )
   end
   local bin = M.build()
   if not bin then

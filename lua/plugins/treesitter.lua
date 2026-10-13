@@ -1,10 +1,33 @@
--- Treesitter (main branch = nový API pre nvim 0.11+).
--- Parsery sa kompilujú lokálne → potrebuje `tree-sitter` CLI (inštaluje Mason) a gcc.
+-- Treesitter (main branch = the new API for nvim 0.11+).
+-- Parsers are compiled locally → needs the `tree-sitter` CLI (installed by Mason) and gcc.
 local parsers = require("config.langs").pick({
   core = {
-    "lua", "luadoc", "luap", "vim", "vimdoc", "query", "regex", "printf", "comment", "diff",
-    "json", "yaml", "toml", "xml", "markdown", "markdown_inline", "ini", "csv", "dockerfile",
-    "make", "zig", "gitcommit", "git_rebase", "gitignore", "git_config", "gitattributes",
+    "lua",
+    "luadoc",
+    "luap",
+    "vim",
+    "vimdoc",
+    "query",
+    "regex",
+    "printf",
+    "comment",
+    "diff",
+    "json",
+    "yaml",
+    "toml",
+    "xml",
+    "markdown",
+    "markdown_inline",
+    "ini",
+    "csv",
+    "dockerfile",
+    "make",
+    "zig",
+    "gitcommit",
+    "git_rebase",
+    "gitignore",
+    "git_config",
+    "gitattributes",
   },
   c = { "c", "cpp", "cuda", "cmake", "meson", "ninja", "glsl", "llvm", "linkerscript", "devicetree", "kconfig" },
   asm = { "asm", "nasm", "disassembly", "objdump", "linkerscript" },
@@ -28,14 +51,16 @@ return {
       ts.setup({})
 
       if vim.fn.executable("tree-sitter") == 1 then
-        ts.install(parsers) -- async, už nainštalované preskočí
+        ts.install(parsers) -- async, skips already installed ones
       else
-        vim.schedule(function()
-          vim.notify("tree-sitter CLI missing: run :MasonInstall tree-sitter-cli and restart", vim.log.levels.WARN)
-        end)
+        vim.schedule(
+          function()
+            vim.notify("tree-sitter CLI missing: run :MasonInstall tree-sitter-cli and restart", vim.log.levels.WARN)
+          end
+        )
       end
 
-      -- Zapni highlight + indent pre každý buffer s dostupným parserom
+      -- Enable highlight + indent for every buffer with an available parser
       vim.api.nvim_create_autocmd("FileType", {
         group = vim.api.nvim_create_augroup("ide_treesitter", { clear = true }),
         callback = function(ev)
@@ -43,7 +68,7 @@ return {
           if not lang or not pcall(vim.treesitter.start, ev.buf, lang) then
             return
           end
-          -- treesitter indent je pre niektoré jazyky horší ako vim-ový
+          -- treesitter indent is worse than vim's for some languages
           if not vim.tbl_contains({ "systemverilog", "verilog", "asm", "nasm", "make" }, ev.match) then
             vim.bo[ev.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
           end
@@ -52,7 +77,7 @@ return {
     end,
   },
 
-  -- Textové objekty a pohyb po funkciách/triedach/argumentoch
+  -- Text objects and motions over functions/classes/arguments
   {
     "nvim-treesitter/nvim-treesitter-textobjects",
     branch = "main",
@@ -66,32 +91,72 @@ return {
       local mv = require("nvim-treesitter-textobjects.move")
       local swap = require("nvim-treesitter-textobjects.swap")
 
-      -- vaf/vif = funkcia, vac/vic = trieda/struct, vaa/via = argument, vai/vii = podmienka, val/vil = cyklus
+      -- vaf/vif = function, vac/vic = class/struct, vaa/via = argument, vai/vii = conditional, val/vil = loop
       local objs = {
-        f = "function", c = "class", a = "parameter", i = "conditional", l = "loop", k = "comment",
+        f = "function",
+        c = "class",
+        a = "parameter",
+        i = "conditional",
+        l = "loop",
+        k = "comment",
       }
       for key, obj in pairs(objs) do
-        vim.keymap.set({ "x", "o" }, "a" .. key, function() sel.select_textobject("@" .. obj .. ".outer", "textobjects") end, { desc = obj .. " (outer)" })
-        vim.keymap.set({ "x", "o" }, "i" .. key, function() sel.select_textobject("@" .. obj .. ".inner", "textobjects") end, { desc = obj .. " (inner)" })
+        vim.keymap.set(
+          { "x", "o" },
+          "a" .. key,
+          function() sel.select_textobject("@" .. obj .. ".outer", "textobjects") end,
+          { desc = obj .. " (outer)" }
+        )
+        vim.keymap.set(
+          { "x", "o" },
+          "i" .. key,
+          function() sel.select_textobject("@" .. obj .. ".inner", "textobjects") end,
+          { desc = obj .. " (inner)" }
+        )
       end
 
-      -- ]f [f = funkcia, ]c [c = trieda, ]a [a = argument (veľké písmeno = koniec)
+      -- ]f [f = function, ]c [c = class, ]a [a = argument (uppercase = end)
       local moves = { f = "@function.outer", c = "@class.outer", a = "@parameter.inner" }
       for key, q in pairs(moves) do
         local m = { "n", "x", "o" }
         vim.keymap.set(m, "]" .. key, function() mv.goto_next_start(q, "textobjects") end, { desc = "Next " .. q })
-        vim.keymap.set(m, "[" .. key, function() mv.goto_previous_start(q, "textobjects") end, { desc = "Previous " .. q })
-        vim.keymap.set(m, "]" .. key:upper(), function() mv.goto_next_end(q, "textobjects") end, { desc = "End of next " .. q })
-        vim.keymap.set(m, "[" .. key:upper(), function() mv.goto_previous_end(q, "textobjects") end, { desc = "End of previous " .. q })
+        vim.keymap.set(
+          m,
+          "[" .. key,
+          function() mv.goto_previous_start(q, "textobjects") end,
+          { desc = "Previous " .. q }
+        )
+        vim.keymap.set(
+          m,
+          "]" .. key:upper(),
+          function() mv.goto_next_end(q, "textobjects") end,
+          { desc = "End of next " .. q }
+        )
+        vim.keymap.set(
+          m,
+          "[" .. key:upper(),
+          function() mv.goto_previous_end(q, "textobjects") end,
+          { desc = "End of previous " .. q }
+        )
       end
 
-      -- Prehodenie argumentov
-      vim.keymap.set("n", "<leader>cx", function() swap.swap_next("@parameter.inner") end, { desc = "Swap argument →" })
-      vim.keymap.set("n", "<leader>cX", function() swap.swap_previous("@parameter.inner") end, { desc = "Swap argument ←" })
+      -- Swap arguments
+      vim.keymap.set(
+        "n",
+        "<leader>cx",
+        function() swap.swap_next("@parameter.inner") end,
+        { desc = "Swap argument →" }
+      )
+      vim.keymap.set(
+        "n",
+        "<leader>cX",
+        function() swap.swap_previous("@parameter.inner") end,
+        { desc = "Swap argument ←" }
+      )
     end,
   },
 
-  -- Sticky kontext hore (v ktorej funkcii/module som)
+  -- Sticky context at the top (which function/module am I in)
   {
     "nvim-treesitter/nvim-treesitter-context",
     event = "BufReadPost",

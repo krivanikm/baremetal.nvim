@@ -1,20 +1,18 @@
--- Jazykovo-špecifické pluginy: Rust, C/C++ (clangd extras, CMake), tasky
+-- Language-specific plugins: Rust, C/C++ (clangd extras, CMake), tasks
 local langs = require("config.langs")
 
 return {
   -- ── Rust ────────────────────────────────────────────────────────────
-  -- rustaceanvim spravuje rust-analyzer (z rustupu) + codelldb debug + runnables
+  -- rustaceanvim manages rust-analyzer (from rustup) + codelldb debugging + runnables
   {
     "mrcjkb/rustaceanvim",
     enabled = langs.has("rust"),
-    lazy = false, -- plugin sa sám lazy-loaduje na ft=rust
+    lazy = false, -- the plugin lazy-loads itself on ft=rust
     init = function()
       vim.g.rustaceanvim = {
         server = {
           on_attach = function(_, buf)
-            local function map(lhs, rhs, desc)
-              vim.keymap.set("n", lhs, rhs, { buffer = buf, desc = desc })
-            end
+            local function map(lhs, rhs, desc) vim.keymap.set("n", lhs, rhs, { buffer = buf, desc = desc }) end
             map("<leader>ca", function() vim.cmd.RustLsp("codeAction") end, "Code action (Rust)")
             map("K", function() vim.cmd.RustLsp({ "hover", "actions" }) end, "Hover actions")
             map("<leader>rR", function() vim.cmd.RustLsp("runnables") end, "Cargo runnables")
@@ -40,7 +38,7 @@ return {
     end,
   },
 
-  -- Cargo.toml: verzie crate-ov, completion, update
+  -- Cargo.toml: crate versions, completion, updates
   {
     "saecki/crates.nvim",
     enabled = langs.has("rust"),
@@ -52,7 +50,7 @@ return {
   },
 
   -- ── C / C++ ─────────────────────────────────────────────────────────
-  -- AST view, memory layout struct-ov, type hierarchy
+  -- AST view, struct memory layout, type hierarchy
   {
     "p00f/clangd_extensions.nvim",
     enabled = langs.has("c"),
@@ -66,7 +64,7 @@ return {
     },
   },
 
-  -- CMake projekty: configure/build/run/debug cieľov (generuje compile_commands.json pre clangd)
+  -- CMake projects: configure/build/run/debug targets (generates compile_commands.json for clangd)
   {
     "Civitasv/cmake-tools.nvim",
     enabled = langs.has("c"),
@@ -74,7 +72,7 @@ return {
     dependencies = { "nvim-lua/plenary.nvim" },
     opts = {
       cmake_build_directory = "build/${variant:buildType}",
-      cmake_soft_link_compile_commands = true, -- symlink compile_commands.json do rootu
+      cmake_soft_link_compile_commands = true, -- symlink compile_commands.json into the project root
       cmake_regenerate_on_save = true,
       cmake_executor = { name = "overseer" },
       cmake_runner = { name = "terminal" },
@@ -93,7 +91,7 @@ return {
     },
   },
 
-  -- ── Tasky (make, cargo, just, npm, vlastné shell príkazy) ───────────
+  -- ── Tasks (make, cargo, just, npm, custom shell commands) ──────────
   {
     "stevearc/overseer.nvim",
     cmd = { "OverseerRun", "OverseerToggle", "OverseerShell", "OverseerTaskAction" },

@@ -1,7 +1,7 @@
 local opt = vim.opt
 
--- Mason binárky (LSP, formattery, tree-sitter CLI, codelldb) do PATH hneď na začiatku,
--- aby ich videl aj treesitter/conform ešte predtým, než sa načíta mason.nvim.
+-- Put Mason binaries (LSP, formatters, tree-sitter CLI, codelldb) on PATH right away,
+-- so treesitter/conform can see them before mason.nvim is loaded.
 vim.env.PATH = vim.fn.stdpath("data") .. "/mason/bin:" .. vim.env.PATH
 
 -- UI
@@ -10,8 +10,8 @@ opt.relativenumber = true
 opt.signcolumn = "yes"
 opt.cursorline = true
 opt.termguicolors = true
-opt.showmode = false -- mód ukazuje lualine
-opt.laststatus = 3 -- jeden globálny statusline
+opt.showmode = false -- lualine shows the mode
+opt.laststatus = 3 -- one global statusline
 opt.cmdheight = 1
 opt.pumheight = 12
 opt.scrolloff = 8
@@ -21,7 +21,7 @@ opt.linebreak = true
 opt.list = true
 opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
 opt.fillchars = { eob = " ", fold = " ", foldopen = "\u{f078}", foldclose = "\u{f054}", foldsep = " " }
-opt.winborder = "rounded" -- okraje všetkých floating okien (0.11+)
+opt.winborder = "rounded" -- borders for all floating windows (0.11+)
 opt.colorcolumn = "100"
 opt.splitright = true
 opt.splitbelow = true
@@ -29,7 +29,7 @@ opt.splitkeep = "screen"
 opt.conceallevel = 2
 opt.confirm = true
 
--- Editácia
+-- Editing
 opt.expandtab = true
 opt.shiftwidth = 4
 opt.tabstop = 4
@@ -47,34 +47,34 @@ opt.updatetime = 200
 opt.timeoutlen = 300
 opt.completeopt = { "menu", "menuone", "noselect" }
 opt.formatoptions = "jcroqlnt"
-opt.inccommand = "split" -- živý náhľad :s///
+opt.inccommand = "split" -- live preview of :s///
 
--- Vyhľadávanie
+-- Search
 opt.ignorecase = true
 opt.smartcase = true
 opt.grepprg = "rg --vimgrep --smart-case"
 opt.grepformat = "%f:%l:%c:%m"
 
--- Folding cez treesitter (zapína sa per-buffer v plugins/treesitter.lua)
+-- Treesitter folding (enabled per buffer in plugins/treesitter.lua)
 opt.foldlevel = 99
 opt.foldlevelstart = 99
 opt.foldmethod = "expr"
 opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 opt.foldtext = ""
 
--- Assembly: *.s/*.S defaultne GAS syntax
+-- Assembly: *.s/*.S default to GAS syntax
 vim.g.asmsyntax = "asm"
 
--- Vypni nepoužívané providery (rýchlejší štart, ticho v :checkhealth)
+-- Disable unused providers (faster startup, quiet :checkhealth)
 vim.g.loaded_perl_provider = 0
 vim.g.loaded_ruby_provider = 0
 vim.g.loaded_node_provider = 0
 vim.g.loaded_python3_provider = 0
 
--- Globálny prepínač formátovania pri uložení (<leader>uf)
+-- Global format-on-save switch (<leader>uf)
 vim.g.autoformat = true
 
--- Extra filetypy
+-- Extra filetypes
 vim.filetype.add({
   extension = {
     vh = "verilog",
@@ -87,7 +87,7 @@ vim.filetype.add({
     xdc = "tcl",
     sdc = "tcl",
     cu = "cuda",
-    -- h = "c", -- odkomentuj ak píšeš čisté C (default nvim berie .h ako cpp)
+    -- h = "c", -- uncomment if you write plain C (nvim treats .h as cpp by default)
   },
   filename = {
     [".clang-format"] = "yaml",

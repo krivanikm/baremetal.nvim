@@ -1,19 +1,21 @@
 return {
-  -- Git znaky v gutteri, hunky, blame
+  -- Git signs in the gutter, hunks, blame
   {
     "lewis6991/gitsigns.nvim",
     event = "BufReadPre",
     opts = {
       signs = {
-        add = { text = "▎" }, change = { text = "▎" }, delete = { text = "\u{f0da}" },
-        topdelete = { text = "\u{f0da}" }, changedelete = { text = "▎" }, untracked = { text = "▎" },
+        add = { text = "▎" },
+        change = { text = "▎" },
+        delete = { text = "\u{f0da}" },
+        topdelete = { text = "\u{f0da}" },
+        changedelete = { text = "▎" },
+        untracked = { text = "▎" },
       },
       current_line_blame_opts = { delay = 300 },
       on_attach = function(buf)
         local gs = require("gitsigns")
-        local function map(mode, l, r, desc)
-          vim.keymap.set(mode, l, r, { buffer = buf, desc = desc })
-        end
+        local function map(mode, l, r, desc) vim.keymap.set(mode, l, r, { buffer = buf, desc = desc }) end
         map("n", "]h", function() gs.nav_hunk("next") end, "Next hunk")
         map("n", "[h", function() gs.nav_hunk("prev") end, "Previous hunk")
         map({ "n", "x" }, "<leader>ghs", ":Gitsigns stage_hunk<cr>", "Stage hunk")
@@ -30,7 +32,7 @@ return {
     },
   },
 
-  -- Diff / história súborov / merge konflikty
+  -- Diff / file history / merge conflicts
   {
     "sindrets/diffview.nvim",
     cmd = { "DiffviewOpen", "DiffviewFileHistory", "DiffviewClose" },

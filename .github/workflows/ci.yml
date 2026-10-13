@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: JohnnyMorganz/stylua-action@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          version: latest
+          args: --check .
+      - run: shellcheck install.sh
+
+  startup:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        nvim: [v0.11.0, stable]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: config/baremetal
+      - uses: rhysd/action-setup-vim@v1
+        with:
+          neovim: true
+          version: ${{ matrix.nvim }}
+      - name: Install plugins
+        env:
+          NVIM_APPNAME: baremetal
+          XDG_CONFIG_HOME: ${{ github.workspace }}/config
+        run: nvim --headless "+Lazy! restore" +qa
+      - name: Start without errors
+        env:
+          NVIM_APPNAME: baremetal
+          XDG_CONFIG_HOME: ${{ github.workspace }}/config
+        run: |
+          printf 'int main(void) { return 0; }\n' > /tmp/a.c
+          nvim --headless /tmp/a.c +'lua vim.defer_fn(function() if vim.v.errmsg ~= "" then io.stderr:write(vim.v.errmsg, "\n") vim.cmd("cq") end vim.cmd("qa!") end, 3000)'

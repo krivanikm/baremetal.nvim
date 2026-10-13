@@ -1,11 +1,11 @@
 return {
   {
     "saghen/blink.cmp",
-    version = "1.*", -- release tag => stiahne predkompilovaný Rust fuzzy matcher
+    version = "1.*", -- release tag => downloads the prebuilt Rust fuzzy matcher
     event = { "InsertEnter", "CmdlineEnter" },
     dependencies = { "rafamadriz/friendly-snippets" },
     opts = {
-      -- Enter potvrdí, Tab/S-Tab prechádza položky a snippet polia, C-space otvorí menu
+      -- Enter accepts, Tab/S-Tab cycles items and snippet fields, C-space opens the menu
       keymap = {
         preset = "enter",
         ["<Tab>"] = { "select_next", "snippet_forward", "fallback" },

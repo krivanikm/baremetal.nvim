@@ -2,8 +2,9 @@
 
 # baremetal.nvim
 
-**Neovim IDE na low-level a hardvérový vývoj: C, C++, Assembly, Rust, SystemVerilog a VHDL.**
+**Kompletný Neovim config na low-level a hardvérový vývoj: C, C++, Assembly, Rust, SystemVerilog a VHDL.**
 
+„Baremetal“ hovorí o tom, čo v ňom píšeš (firmvér, procesory, kód bez OS), nie o tom, že by bol config minimalistický.
 Postavené na `lazy.nvim` a natívnom LSP API z Neovimu 0.11+.
 Vyberieš si len jazyky, ktoré potrebuješ, a inštalátor nastaví zvyšok.
 
@@ -18,7 +19,7 @@ Vyberieš si len jazyky, ktoré potrebuješ, a inštalátor nastaví zvyšok.
 ## Čo to vie
 
 - **LSP funguje hneď po prvom spustení.** Mason sám nainštaluje clangd, rust-analyzer, verible, vhdl_ls, asm-lsp a ďalšie.
-- **`<Space>rr` skompiluje a spustí aktuálny súbor.** C/C++ sa kompiluje s ASan a UBSan, Rust cez `cargo run`, Verilog testbenche cez Icarus.
+- **`<Space>rr` skompiluje a spustí aktuálny súbor.** C/C++ sa kompiluje s ASan a UBSan, Rust cez `cargo run`, Verilog testbenche cez Icarus spolu so všetkými `.sv`/`.v` súbormi v priečinku (alebo podľa `verible.filelist`).
 - **Debugger.** codelldb a natívny GDB, vrátane remote targetu pre embedded (OpenOCD, QEMU).
 - **CMake.** Configure, build, run, debug a CTest; vygeneruje aj `compile_commands.json` pre clangd.
 - **HDL.** Jazykový server a formatter verible, plus verilator linter, ktorý nájde moduly aj v iných priečinkoch.
@@ -86,7 +87,7 @@ NVIM_APPNAME=baremetal nvim
 | Prepínač | |
 |---|---|
 | `-l, --langs c,rust,python` | Jazyky bez menu (`all` = všetky) |
-| `-y, --yes` | Bez otázok; všetky jazyky, ak nie je zadané `--langs` |
+| `-y, --yes` | Bez otázok; predvolené jazyky (C/C++, Assembly, SystemVerilog), ak nie je zadané `--langs` |
 | `--no-deps` | Neinštalovať systémové balíky |
 | `--no-sync` | Pluginy a nástroje sa nainštalujú až pri prvom spustení |
 | `--appname NAME` | Inštalácia vedľa existujúceho configu ako `NVIM_APPNAME=NAME` |
