@@ -14,16 +14,16 @@ return {
         local function map(mode, l, r, desc)
           vim.keymap.set(mode, l, r, { buffer = buf, desc = desc })
         end
-        map("n", "]h", function() gs.nav_hunk("next") end, "Ďalší hunk")
-        map("n", "[h", function() gs.nav_hunk("prev") end, "Predošlý hunk")
+        map("n", "]h", function() gs.nav_hunk("next") end, "Next hunk")
+        map("n", "[h", function() gs.nav_hunk("prev") end, "Previous hunk")
         map({ "n", "x" }, "<leader>ghs", ":Gitsigns stage_hunk<cr>", "Stage hunk")
         map({ "n", "x" }, "<leader>ghr", ":Gitsigns reset_hunk<cr>", "Reset hunk")
         map("n", "<leader>ghS", gs.stage_buffer, "Stage buffer")
         map("n", "<leader>ghR", gs.reset_buffer, "Reset buffer")
         map("n", "<leader>ghp", gs.preview_hunk_inline, "Preview hunk")
-        map("n", "<leader>ghb", function() gs.blame_line({ full = true }) end, "Blame riadku")
+        map("n", "<leader>ghb", function() gs.blame_line({ full = true }) end, "Blame line")
         map("n", "<leader>ghB", gs.blame, "Blame buffra")
-        map("n", "<leader>ghd", gs.diffthis, "Diff voči indexu")
+        map("n", "<leader>ghd", gs.diffthis, "Diff against index")
         map("n", "<leader>ub", gs.toggle_current_line_blame, "Toggle inline blame")
         map({ "o", "x" }, "ih", ":<C-u>Gitsigns select_hunk<cr>", "Hunk")
       end,
@@ -35,9 +35,9 @@ return {
     "sindrets/diffview.nvim",
     cmd = { "DiffviewOpen", "DiffviewFileHistory", "DiffviewClose" },
     keys = {
-      { "<leader>gd", "<cmd>DiffviewOpen<cr>", desc = "Diffview (zmeny)" },
-      { "<leader>gD", "<cmd>DiffviewClose<cr>", desc = "Zavrieť diffview" },
-      { "<leader>gH", "<cmd>DiffviewFileHistory %<cr>", desc = "História súboru" },
+      { "<leader>gd", "<cmd>DiffviewOpen<cr>", desc = "Diffview (changes)" },
+      { "<leader>gD", "<cmd>DiffviewClose<cr>", desc = "Close diffview" },
+      { "<leader>gH", "<cmd>DiffviewFileHistory %<cr>", desc = "File history" },
     },
     opts = {},
   },

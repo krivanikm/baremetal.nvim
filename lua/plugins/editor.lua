@@ -29,7 +29,7 @@ return {
             function(state)
               vim.fn.setreg("+", state.tree:get_node():get_id())
             end,
-            desc = "Kopírovať cestu",
+            desc = "Copy path",
           },
         },
       },
@@ -46,7 +46,7 @@ return {
   {
     "stevearc/oil.nvim",
     cmd = "Oil",
-    keys = { { "-", "<cmd>Oil<cr>", desc = "Oil (rodičovský adresár)" } },
+    keys = { { "-", "<cmd>Oil<cr>", desc = "Oil (parent directory)" } },
     opts = { view_options = { show_hidden = true }, float = { padding = 4 } },
   },
 
@@ -87,8 +87,8 @@ return {
     event = "BufReadPost",
     opts = {},
     keys = {
-      { "]t", function() require("todo-comments").jump_next() end, desc = "Ďalší TODO" },
-      { "[t", function() require("todo-comments").jump_prev() end, desc = "Predošlý TODO" },
+      { "]t", function() require("todo-comments").jump_next() end, desc = "Next TODO" },
+      { "[t", function() require("todo-comments").jump_prev() end, desc = "Previous TODO" },
       { "<leader>xt", "<cmd>Trouble todo toggle<cr>", desc = "TODO (Trouble)" },
     },
   },
@@ -99,9 +99,9 @@ return {
     cmd = "Trouble",
     opts = { focus = true },
     keys = {
-      { "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>", desc = "Diagnostika (projekt)" },
-      { "<leader>xX", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", desc = "Diagnostika (buffer)" },
-      { "<leader>cs", "<cmd>Trouble symbols toggle focus=false win.position=right<cr>", desc = "Symboly (Trouble)" },
+      { "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>", desc = "Diagnostics (project)" },
+      { "<leader>xX", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", desc = "Diagnostics (buffer)" },
+      { "<leader>cs", "<cmd>Trouble symbols toggle focus=false win.position=right<cr>", desc = "Symbols (Trouble)" },
       { "<leader>cl", "<cmd>Trouble lsp toggle focus=false win.position=right<cr>", desc = "LSP def/ref (Trouble)" },
       { "<leader>xq", "<cmd>Trouble qflist toggle<cr>", desc = "Quickfix (Trouble)" },
       { "<leader>xl", "<cmd>Trouble loclist toggle<cr>", desc = "Location list (Trouble)" },
@@ -120,7 +120,7 @@ return {
     },
     keys = {
       { "<leader>co", "<cmd>AerialToggle<cr>", desc = "Outline" },
-      { "<leader>sa", "<cmd>AerialNavToggle<cr>", desc = "Outline navigácia" },
+      { "<leader>sa", "<cmd>AerialNavToggle<cr>", desc = "Outline navigation" },
     },
   },
 
@@ -140,7 +140,7 @@ return {
           })
         end,
         mode = { "n", "v" },
-        desc = "Search & replace (projekt)",
+        desc = "Search & replace (project)",
       },
     },
   },
@@ -151,10 +151,10 @@ return {
     event = "BufReadPre",
     opts = {},
     keys = {
-      { "<leader>qs", function() require("persistence").load() end, desc = "Obnoviť session" },
-      { "<leader>qS", function() require("persistence").select() end, desc = "Vybrať session" },
-      { "<leader>ql", function() require("persistence").load({ last = true }) end, desc = "Posledná session" },
-      { "<leader>qd", function() require("persistence").stop() end, desc = "Neukladať session" },
+      { "<leader>qs", function() require("persistence").load() end, desc = "Restore session" },
+      { "<leader>qS", function() require("persistence").select() end, desc = "Select session" },
+      { "<leader>ql", function() require("persistence").load({ last = true }) end, desc = "Last session" },
+      { "<leader>qd", function() require("persistence").stop() end, desc = "Stop saving session" },
     },
   },
 
@@ -169,7 +169,7 @@ return {
     opts = { settings = { save_on_toggle = true } },
     keys = function()
       local keys = {
-        { "<leader>H", function() require("harpoon"):list():add() end, desc = "Harpoon pridať súbor" },
+        { "<leader>H", function() require("harpoon"):list():add() end, desc = "Harpoon add file" },
         {
           "<leader>h",
           function()

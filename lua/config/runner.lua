@@ -67,7 +67,7 @@ function M.run()
   local file = vim.api.nvim_buf_get_name(0)
   local r = recipe(file)
   if not r then
-    return vim.notify("Runner: nepodporovaný filetype " .. vim.bo.filetype, vim.log.levels.WARN)
+    return vim.notify("Runner: unsupported filetype " .. vim.bo.filetype, vim.log.levels.WARN)
   end
   local cmd = r.build and (r.build .. " && " .. r.run) or r.run
   term({ "sh", "-c", cmd }, r.cwd or vim.fn.fnamemodify(file, ":h"))
@@ -79,14 +79,14 @@ function M.build()
   local file = vim.api.nvim_buf_get_name(0)
   local r = recipe(file)
   if not r or not r.build then
-    vim.notify("Runner: tento filetype nemá build krok", vim.log.levels.WARN)
+    vim.notify("Runner: this filetype has no build step", vim.log.levels.WARN)
     return nil
   end
   local res = vim.system({ "sh", "-c", r.build }, { text = true }):wait()
   local output = (res.stdout or "") .. (res.stderr or "")
   vim.fn.setqflist({}, "r", { title = r.build, lines = vim.split(output, "\n", { trimempty = true }) })
   if res.code ~= 0 then
-    vim.notify("Build zlyhal", vim.log.levels.ERROR)
+    vim.notify("Build failed", vim.log.levels.ERROR)
     vim.cmd("copen")
     return nil
   end
@@ -96,7 +96,7 @@ end
 
 function M.debug()
   if not pcall(require, "dap") then
-    return vim.notify("Runner: debugger nie je zapnutý (vyber C/ASM/Rust v lua/custom/languages.lua)", vim.log.levels.WARN)
+    return vim.notify("Runner: debugger is disabled (enable c, asm or rust in lua/custom/languages.lua)", vim.log.levels.WARN)
   end
   local bin = M.build()
   if not bin then
@@ -112,8 +112,8 @@ function M.debug()
   })
 end
 
-vim.keymap.set("n", "<leader>rr", M.run, { desc = "Run súbor" })
-vim.keymap.set("n", "<leader>rb", M.build, { desc = "Build súbor" })
-vim.keymap.set("n", "<leader>rd", M.debug, { desc = "Build + debug súbor" })
+vim.keymap.set("n", "<leader>rr", M.run, { desc = "Run file" })
+vim.keymap.set("n", "<leader>rb", M.build, { desc = "Build file" })
+vim.keymap.set("n", "<leader>rd", M.debug, { desc = "Build + debug file" })
 
 return M

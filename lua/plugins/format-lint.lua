@@ -36,7 +36,7 @@ return {
     event = "BufWritePre",
     cmd = "ConformInfo",
     keys = {
-      { "<leader>cf", function() require("conform").format({ async = true }) end, mode = { "n", "x" }, desc = "Formátovať" },
+      { "<leader>cf", function() require("conform").format({ async = true }) end, mode = { "n", "x" }, desc = "Format" },
     },
     opts = {
       formatters_by_ft = formatters_by_ft,
@@ -103,7 +103,7 @@ return {
       })
     end,
     keys = {
-      { "<leader>cv", function() require("lint").try_lint() end, desc = "Spustiť linter" },
+      { "<leader>cv", function() require("lint").try_lint() end, desc = "Run linter" },
     },
   },
 }

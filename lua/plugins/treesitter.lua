@@ -31,7 +31,7 @@ return {
         ts.install(parsers) -- async, už nainštalované preskočí
       else
         vim.schedule(function()
-          vim.notify("tree-sitter CLI chýba – :MasonInstall tree-sitter-cli a reštartuj", vim.log.levels.WARN)
+          vim.notify("tree-sitter CLI missing: run :MasonInstall tree-sitter-cli and restart", vim.log.levels.WARN)
         end)
       end
 
@@ -79,10 +79,10 @@ return {
       local moves = { f = "@function.outer", c = "@class.outer", a = "@parameter.inner" }
       for key, q in pairs(moves) do
         local m = { "n", "x", "o" }
-        vim.keymap.set(m, "]" .. key, function() mv.goto_next_start(q, "textobjects") end, { desc = "Ďalší " .. q })
-        vim.keymap.set(m, "[" .. key, function() mv.goto_previous_start(q, "textobjects") end, { desc = "Predošlý " .. q })
-        vim.keymap.set(m, "]" .. key:upper(), function() mv.goto_next_end(q, "textobjects") end, { desc = "Koniec ďalšieho " .. q })
-        vim.keymap.set(m, "[" .. key:upper(), function() mv.goto_previous_end(q, "textobjects") end, { desc = "Koniec predošlého " .. q })
+        vim.keymap.set(m, "]" .. key, function() mv.goto_next_start(q, "textobjects") end, { desc = "Next " .. q })
+        vim.keymap.set(m, "[" .. key, function() mv.goto_previous_start(q, "textobjects") end, { desc = "Previous " .. q })
+        vim.keymap.set(m, "]" .. key:upper(), function() mv.goto_next_end(q, "textobjects") end, { desc = "End of next " .. q })
+        vim.keymap.set(m, "[" .. key:upper(), function() mv.goto_previous_end(q, "textobjects") end, { desc = "End of previous " .. q })
       end
 
       -- Prehodenie argumentov
@@ -97,7 +97,7 @@ return {
     event = "BufReadPost",
     opts = { max_lines = 3, multiline_threshold = 1 },
     keys = {
-      { "[x", function() require("treesitter-context").go_to_context(vim.v.count1) end, desc = "Skok na kontext" },
+      { "[x", function() require("treesitter-context").go_to_context(vim.v.count1) end, desc = "Jump to context" },
       { "<leader>ut", "<cmd>TSContext toggle<cr>", desc = "Treesitter context" },
     },
   },

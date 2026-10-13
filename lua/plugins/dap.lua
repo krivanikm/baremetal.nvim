@@ -5,7 +5,7 @@ local function pick_program()
     local cwd = vim.fn.getcwd()
     -- ponúkni spustiteľné súbory z build adresárov
     Snacks.picker.files({
-      title = "Vyber binárku na debug",
+      title = "Pick a binary to debug",
       cmd = "fd",
       args = { "--type", "x", "--no-ignore", "--hidden", "--exclude", ".git", "--exclude", "*.so" },
       cwd = cwd,
@@ -18,11 +18,11 @@ local function pick_program()
 end
 
 local function input_program()
-  return vim.fn.input("Binárka: ", vim.fn.getcwd() .. "/", "file")
+  return vim.fn.input("Binary: ", vim.fn.getcwd() .. "/", "file")
 end
 
 local function args()
-  local a = vim.fn.input("Argumenty: ")
+  local a = vim.fn.input("Arguments: ")
   return vim.split(a, " ", { trimempty = true })
 end
 
@@ -41,24 +41,24 @@ return {
       { "<F12>", function() require("dap").step_out() end, desc = "Debug: Step out" },
       { "<F9>", function() require("dap").toggle_breakpoint() end, desc = "Debug: Breakpoint" },
       { "<leader>db", function() require("dap").toggle_breakpoint() end, desc = "Breakpoint" },
-      { "<leader>dB", function() require("dap").set_breakpoint(vim.fn.input("Podmienka: ")) end, desc = "Podmienený breakpoint" },
+      { "<leader>dB", function() require("dap").set_breakpoint(vim.fn.input("Condition: ")) end, desc = "Conditional breakpoint" },
       { "<leader>dL", function() require("dap").set_breakpoint(nil, nil, vim.fn.input("Log: ")) end, desc = "Logpoint" },
       { "<leader>dc", function() require("dap").continue() end, desc = "Continue/Start" },
       { "<leader>dC", function() require("dap").run_to_cursor() end, desc = "Run to cursor" },
       { "<leader>di", function() require("dap").step_into() end, desc = "Step into" },
       { "<leader>do", function() require("dap").step_over() end, desc = "Step over" },
       { "<leader>dO", function() require("dap").step_out() end, desc = "Step out" },
-      { "<leader>dj", function() require("dap").down() end, desc = "Frame dole" },
-      { "<leader>dk", function() require("dap").up() end, desc = "Frame hore" },
-      { "<leader>dl", function() require("dap").run_last() end, desc = "Spustiť posledné" },
-      { "<leader>dp", function() require("dap").pause() end, desc = "Pauza" },
+      { "<leader>dj", function() require("dap").down() end, desc = "Frame down" },
+      { "<leader>dk", function() require("dap").up() end, desc = "Frame up" },
+      { "<leader>dl", function() require("dap").run_last() end, desc = "Run last" },
+      { "<leader>dp", function() require("dap").pause() end, desc = "Pause" },
       { "<leader>dr", function() require("dap").repl.toggle() end, desc = "REPL" },
-      { "<leader>dt", function() require("dap").terminate() end, desc = "Ukončiť" },
+      { "<leader>dt", function() require("dap").terminate() end, desc = "Terminate" },
       { "<leader>du", function() require("dapui").toggle() end, desc = "Debug UI" },
       { "<leader>de", function() require("dapui").eval() end, desc = "Eval", mode = { "n", "x" } },
-      { "<leader>dw", function() require("dapui").elements.watches.add(vim.fn.expand("<cword>")) end, desc = "Pridať watch" },
-      { "<leader>dx", function() require("dap").clear_breakpoints() end, desc = "Zmazať breakpointy" },
-      { "<leader>dd", function() require("dap").disassemble() end, desc = "Disassembly (ak adapter podporuje)" },
+      { "<leader>dw", function() require("dapui").elements.watches.add(vim.fn.expand("<cword>")) end, desc = "Add watch" },
+      { "<leader>dx", function() require("dap").clear_breakpoints() end, desc = "Clear breakpoints" },
+      { "<leader>dd", function() require("dap").disassemble() end, desc = "Disassembly (if supported)" },
     },
     config = function()
       local dap, dapui = require("dap"), require("dapui")
@@ -86,7 +86,7 @@ return {
 
       local c_cfg = {
         {
-          name = "codelldb: vybrať binárku",
+          name = "codelldb: pick binary",
           type = "codelldb",
           request = "launch",
           program = vim.fn.executable("fd") == 1 and pick_program or input_program,
@@ -94,7 +94,7 @@ return {
           stopOnEntry = false,
         },
         {
-          name = "codelldb: binárka + argumenty",
+          name = "codelldb: binary + arguments",
           type = "codelldb",
           request = "launch",
           program = input_program,
@@ -102,7 +102,7 @@ return {
           cwd = "${workspaceFolder}",
         },
         {
-          name = "gdb: spustiť",
+          name = "gdb: launch",
           type = "gdb",
           request = "launch",
           program = input_program,
@@ -111,7 +111,7 @@ return {
           stopAtBeginningOfMainSubprogram = false,
         },
         {
-          name = "gdb: attach k procesu",
+          name = "gdb: attach to process",
           type = "gdb",
           request = "attach",
           pid = function() return require("dap.utils").pick_process() end,

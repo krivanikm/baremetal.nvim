@@ -159,8 +159,6 @@ The leader key is **`Space`**. Press it and wait, and which-key shows every key 
 | `<Space>gg` | Lazygit |
 | `<C-/>` | Terminal |
 
-> **Note:** the descriptions shown in which-key and on the start screen are in Slovak. The keys themselves are the same as in the docs.
-
 ## Customize
 
 Personal changes go into `lua/custom/`, which git ignores, so `git pull` never conflicts with them:
@@ -218,7 +216,7 @@ To get your old setup back, rename the `*.bak-<date>` folders the installer crea
 | Problem | Fix |
 |---|---|
 | Squares or question marks instead of icons | Install a Nerd Font and select it in your terminal |
-| `tree-sitter CLI chýba` warning | `:MasonInstall tree-sitter-cli`, then restart |
+| `tree-sitter CLI missing` warning | `:MasonInstall tree-sitter-cli`, then restart |
 | clangd can't find headers | Generate `compile_commands.json` (see [project tips](#project-tips)) |
 | A language server is missing | `:Mason` shows what's installed. `:checkhealth vim.lsp` shows what's attached |
 | Something else | `:checkhealth`, `:Lazy`, `:Mason`, `:messages` |

@@ -43,7 +43,7 @@ au("FileType", {
   pattern = { "help", "qf", "man", "lspinfo", "checkhealth", "notify", "startuptime", "dap-float", "grug-far" },
   callback = function(ev)
     vim.bo[ev.buf].buflisted = false
-    vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = ev.buf, silent = true, desc = "Zavrieť" })
+    vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = ev.buf, silent = true, desc = "Close" })
   end,
 })
 
