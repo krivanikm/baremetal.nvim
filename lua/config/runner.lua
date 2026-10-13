@@ -18,7 +18,7 @@ end
 local function recipe(file)
   local ft = vim.bo.filetype
   local name = vim.fn.fnamemodify(file, ":t:r")
-  local bin = out_dir .. "/" .. name
+  local bin = out_dir .. "/" .. name .. "-" .. vim.fn.sha256(file):sub(1, 8)
   local r = {
     c = { build = ("gcc -std=c17 -g -O0 -Wall -Wextra -fsanitize=address,undefined %s -o %s -lm"):format(q(file), q(bin)) },
     cpp = { build = ("g++ -std=c++23 -g -O0 -Wall -Wextra -fsanitize=address,undefined %s -o %s"):format(q(file), q(bin)) },

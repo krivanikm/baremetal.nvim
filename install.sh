@@ -363,9 +363,9 @@ main() {
   printf '\n%sbaremetal.nvim%s — Neovim IDE for C / C++ / ASM / Rust / SystemVerilog / VHDL\n' "$BOLD" "$RESET"
 
   choose_langs
+  check_nvim
   [[ $INSTALL_DEPS -eq 1 ]] && install_deps
   setup_rust
-  check_nvim
   install_config
   write_langs
   [[ $SYNC -eq 1 ]] && sync_plugins

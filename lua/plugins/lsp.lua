@@ -36,7 +36,7 @@ local servers = {
       "--completion-style=detailed",
       "--function-arg-placeholders=true",
       "--fallback-style=llvm",
-      "--query-driver=/usr/bin/**/*", -- aj cross-kompilátory (arm-none-eabi-gcc, riscv64-...)
+      "--query-driver=/usr/bin/*gcc*,/usr/bin/*g++*,/usr/bin/clang*,/usr/local/bin/*gcc*,/usr/local/bin/*g++*,/opt/homebrew/bin/*gcc*,/opt/homebrew/bin/*g++*", -- aj cross-kompilátory (arm-none-eabi-gcc, riscv64-...)
     },
     init_options = { usePlaceholders = true, completeUnimported = true, clangdFileStatus = true },
   },
@@ -125,7 +125,18 @@ local function on_attach(client, buf)
   end
   -- Codelens ("▶ Run", počty referencií) – <leader>cc spustí lens na riadku
   if client:supports_method("textDocument/codeLens") then
-    vim.lsp.codelens.enable(true, { bufnr = buf })
+    if vim.lsp.codelens.enable then
+      vim.lsp.codelens.enable(true, { bufnr = buf })
+    else
+      vim.lsp.codelens.refresh({ bufnr = buf })
+      vim.api.nvim_create_autocmd({ "BufEnter", "InsertLeave", "BufWritePost" }, {
+        group = vim.api.nvim_create_augroup("ide_codelens_" .. buf, { clear = true }),
+        buffer = buf,
+        callback = function()
+          vim.lsp.codelens.refresh({ bufnr = buf })
+        end,
+      })
+    end
   end
   -- LSP folding ak ho server vie (lepšie ako treesitter pre #ifdef bloky v C)
   if client:supports_method("textDocument/foldingRange") then
