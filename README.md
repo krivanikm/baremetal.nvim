@@ -7,11 +7,13 @@
 Built on `lazy.nvim` and the native LSP API of Neovim 0.11+.
 Pick only the languages you need, and the installer sets up the rest.
 
-[Install](#install) · [Languages](#languages) · [Keymaps](docs/keymaps.md) · [Customize](docs/customization.md) · [Tutor](#tutor) · [Slovensky](README.sk.md)
+[Screenshots](#screenshots) · [Install](#install) · [Languages](#languages) · [Keymaps](docs/keymaps.md) · [Customize](docs/customization.md) · [Tutor](#tutor) · [Slovensky](README.sk.md)
 
 </div>
 
 ---
+
+<p align="center"><img src="docs/screenshots/lsp.png" alt="Editing C with clangd hover docs, file tree and git signs" width="100%"></p>
 
 ## Features
 
@@ -26,6 +28,24 @@ Pick only the languages you need, and the installer sets up the rest.
 - **Treesitter text objects and motions**: functions, classes, arguments, loops and conditionals.
 - **which-key.** Press `<Space>` and wait, and every keymap shows up.
 - **Interactive tutor.** Run `:Tutor baremetal` to learn the setup in about 15 minutes.
+
+## Screenshots
+
+| | |
+|:---:|:---:|
+| <img src="docs/screenshots/dashboard.png" alt="Start screen"><br>**Start screen** | <img src="docs/screenshots/completion.png" alt="Completion"><br>**Completion with signatures and inlay hints** |
+| <img src="docs/screenshots/picker.png" alt="Project grep"><br>**Project grep with live preview** (`<Space>/`) | <img src="docs/screenshots/whichkey.png" alt="which-key"><br>**which-key: press `<Space>` and wait** |
+| <img src="docs/screenshots/debug.png" alt="Debugger"><br>**Debugging C with codelldb** (`F5`, `F9`, `F10`) | <img src="docs/screenshots/run.png" alt="Run file"><br>**Compile & run the current file** (`<Space>rr`) |
+| <img src="docs/screenshots/hdl.png" alt="SystemVerilog lint"><br>**SystemVerilog: verible + verilator lint** | <img src="docs/screenshots/git.png" alt="Diffview"><br>**Git diff view** (`<Space>gd`) |
+| <img src="docs/screenshots/tutor.png" alt="Tutor"><br>**Interactive tutor** (`:Tutor baremetal`) | |
+
+## Built with baremetal.nvim
+
+**[mnpk01-soc](https://github.com/krivanikm/mnpk01-soc)** is a custom 16-bit CPU / SoC written in SystemVerilog, simulated with Verilator and targeting the Tang Nano 9K FPGA. The RTL is written in this setup.
+
+<p align="center"><img src="docs/screenshots/cpu.png" alt="mnpk01-soc control unit in Neovim" width="100%"></p>
+<p align="center"><img src="docs/screenshots/yosys-system-top.png" alt="Yosys schematic of the mnpk01-soc top level" width="100%"></p>
+<p align="center"><sub>The control unit FSM in Neovim, and the <code>system_top</code> netlist rendered by <code>yosys show</code>.</sub></p>
 
 ## Requirements
 

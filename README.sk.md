@@ -7,11 +7,13 @@
 Postavené na `lazy.nvim` a natívnom LSP API z Neovimu 0.11+.
 Vyberieš si len jazyky, ktoré potrebuješ, a inštalátor nastaví zvyšok.
 
-[Inštalácia](#inštalácia) · [Jazyky](#jazyky) · [Skratky](docs/keymaps.md) · [Prispôsobenie](docs/customization.md) · [Tutor](#tutor) · [English](README.md)
+[Screenshoty](#screenshoty) · [Inštalácia](#inštalácia) · [Jazyky](#jazyky) · [Skratky](docs/keymaps.md) · [Prispôsobenie](docs/customization.md) · [Tutor](#tutor) · [English](README.md)
 
 </div>
 
 ---
+
+<p align="center"><img src="docs/screenshots/lsp.png" alt="Editovanie C s clangd dokumentáciou, stromom súborov a git znakmi" width="100%"></p>
 
 ## Čo to vie
 
@@ -26,6 +28,24 @@ Vyberieš si len jazyky, ktoré potrebuješ, a inštalátor nastaví zvyšok.
 - **Treesitter textové objekty a pohyb** po funkciách, triedach, argumentoch, cykloch a podmienkach.
 - **which-key.** Stlač `<Space>`, počkaj a uvidíš všetky skratky.
 - **Interaktívny tutor.** `:Tutor baremetal` ťa celým setupom prevedie asi za 15 minút.
+
+## Screenshoty
+
+| | |
+|:---:|:---:|
+| <img src="docs/screenshots/dashboard.png" alt="Úvodná obrazovka"><br>**Úvodná obrazovka** | <img src="docs/screenshots/completion.png" alt="Doplňovanie"><br>**Doplňovanie so signatúrami a inlay hintmi** |
+| <img src="docs/screenshots/picker.png" alt="Grep"><br>**Grep v projekte s náhľadom** (`<Space>/`) | <img src="docs/screenshots/whichkey.png" alt="which-key"><br>**which-key: stlač `<Space>` a počkaj** |
+| <img src="docs/screenshots/debug.png" alt="Debugger"><br>**Debugovanie C cez codelldb** (`F5`, `F9`, `F10`) | <img src="docs/screenshots/run.png" alt="Spustenie"><br>**Skompiluj a spusti súbor** (`<Space>rr`) |
+| <img src="docs/screenshots/hdl.png" alt="SystemVerilog"><br>**SystemVerilog: verible + verilator lint** | <img src="docs/screenshots/git.png" alt="Diffview"><br>**Git diff** (`<Space>gd`) |
+| <img src="docs/screenshots/tutor.png" alt="Tutor"><br>**Interaktívny tutor** (`:Tutor baremetal`) | |
+
+## Postavené v baremetal.nvim
+
+**[mnpk01-soc](https://github.com/krivanikm/mnpk01-soc)** je vlastný 16-bitový CPU / SoC v SystemVerilogu, simulovaný vo Verilatore, s cieľom bežať na FPGA Tang Nano 9K. RTL je písané v tomto setupe.
+
+<p align="center"><img src="docs/screenshots/cpu.png" alt="Riadiaca jednotka mnpk01-soc v Neovime" width="100%"></p>
+<p align="center"><img src="docs/screenshots/yosys-system-top.png" alt="Schéma system_top z Yosys" width="100%"></p>
+<p align="center"><sub>FSM riadiacej jednotky v Neovime a netlist <code>system_top</code> vykreslený cez <code>yosys show</code>.</sub></p>
 
 ## Požiadavky
 
