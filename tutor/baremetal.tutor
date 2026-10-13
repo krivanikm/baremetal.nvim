@@ -1,0 +1,303 @@
+# Welcome to the baremetal.nvim tutor
+
+This tutor walks you through everything this config adds on top of plain
+Neovim. It takes about 15 minutes. Lines marked ✗ are exercises: edit them
+until the mark turns into ✓.
+
+New to Vim itself? Do the built-in tutor first: `:Tutor`{vim}
+
+Table of contents:
+
+- [Lesson 1: The leader key](*leader*)
+- [Lesson 2: Finding files and text](*finding*)
+- [Lesson 3: Moving around fast](*moving*)
+- [Lesson 4: Editing superpowers](*editing*)
+- [Lesson 5: Code intelligence (LSP)](*lsp*)
+- [Lesson 6: Build, run and debug](*run*)
+- [Lesson 7: Git](*git*)
+- [Lesson 8: Windows, buffers and terminal](*windows*)
+- [Lesson 9: Toggles and sessions](*toggles*)
+- [Lesson 10: Making it yours](*custom*)
+
+Press `<Enter>`{normal} on any link above to jump to it.
+
+# Lesson 1: THE LEADER KEY *leader*
+
+** The leader key is `<Space>`. Press it and wait. **
+
+Almost every command in this config starts with `<Space>`. You do not have to
+memorise anything: press `<Space>` and wait a moment, and a popup
+(which-key) lists every key you can press next, grouped by topic:
+
+    <Space>f   find          <Space>c   code (LSP)
+    <Space>s   search        <Space>d   debug
+    <Space>g   git           <Space>r   run
+    <Space>b   buffers       <Space>u   UI toggles
+    <Space>x   diagnostics   <Space>m   CMake
+
+  1. Press `<Space>` now and look at the popup. Press `<Esc>` to close it.
+
+  2. Press `<Space>c` and wait. These are the code commands you will use
+     every day.
+
+  3. Press `<Space>sk` to search through *all* keymaps by name. Type `harpoon`
+     to see the harpoon keys, then `<Esc>`.
+
+# Lesson 2: FINDING FILES AND TEXT *finding*
+
+** One fuzzy finder for everything: `<Space><Space>`. **
+
+    <Space><Space>   smart find (files, recent, buffers in one list)
+    <Space>ff        files in the project
+    <Space>fr        recently opened files
+    <Space>fb        open buffers        (also <Space>,)
+    <Space>/         grep the whole project
+    <Space>sw        grep the word under the cursor
+    <Space>sR        search & replace across the project
+    <Space>sr        resume the last search
+
+Inside any picker: type to filter, `<C-j>`/`<C-k>` to move, `<Enter>` to
+open, `<C-v>` to open in a vertical split, `<Esc>` to close.
+
+  1. Press `<Space>fc` to list the config files. Type `keymaps` and press
+     `<Enter>`. Come back with `<C-o>`{normal}.
+
+** Two file explorers. **
+
+    <Space>e    tree on the left (neo-tree), `l` opens, `h` closes a folder
+    -           oil: the current folder as an editable buffer
+
+  2. Press `-`{normal}. You are now editing the folder as text: rename a file by
+     changing its line, delete it with `dd`, create it by typing a new line.
+     Changes are applied when you save with `:w`. Press `-` again to go up,
+     `<Esc>` or `:q` to leave without changes.
+
+** Harpoon: pin the 4-5 files you are working on. **
+
+    <Space>H        pin the current file
+    <Space>h        show the pinned list (reorder / delete like text)
+    <Space>1 … 5    jump straight to pinned file 1 … 5
+
+# Lesson 3: MOVING AROUND FAST *moving*
+
+** Press `s` and two characters to jump anywhere on screen. **
+
+Press `s`{normal}, type the first two characters of where you want to go,
+then press the label letter that appears there.
+
+  1. Use `s` to jump onto the `X` below, then press `x` to delete it.
+
+The quick brown fXox jumps over the lazy dog. [[The quick brown fox jumps over the lazy dog.]]
+
+  2. `S`{normal} selects a whole syntax node with labels. It shines in real
+     code: try `S` in a C or Rust file and pick a label to select a whole
+     `if`, function call or block.
+
+** Jump by code structure (in code files with a treesitter parser). **
+
+    ]f  [f    next / previous function       ]F [F   end of function
+    ]c  [c    next / previous class/struct
+    ]a  [a    next / previous argument
+    ]]  [[    next / previous use of the word under the cursor
+    ]d  [d    next / previous diagnostic     ]e [e   errors only
+    ]h  [h    next / previous git change
+    ]t  [t    next / previous TODO comment
+    [x        jump up to the enclosing function/module (sticky header)
+
+`<C-d>`, `<C-u>`, `n` and `N` keep the cursor centred on the screen.
+
+# Lesson 4: EDITING SUPERPOWERS *editing*
+
+** Surround: add, delete and replace brackets and quotes. **
+
+    gsa{motion}{char}   add       gsaiw"   wraps a word in "quotes"
+    gsd{char}           delete    gsd(     removes the ( ) around the cursor
+    gsr{old}{new}       replace   gsr'"    turns 'x' into "x"
+
+  1. Put the cursor on `hello` and type `gsaiw"` to wrap it in quotes.
+
+say hello to everyone [[say "hello" to everyone]]
+
+  2. Put the cursor inside the inner parentheses and type `gsd(`.
+
+print((value)) [[print(value)]]
+
+  3. Put the cursor inside the quotes and type `gsr'"`.
+
+let name = 'baremetal' [[let name = "baremetal"]]
+
+  4. In visual mode, `gsa` wraps the selection. Select `x + y` with `v` and
+     type `gsa)`.
+
+total = x + y * 2 [[total = (x + y) * 2]]
+
+** Move lines with `<A-j>` / `<A-k>`. **
+
+  5. Put the cursor on the line that says `second` and press `<A-k>` to
+     move it up so the list is in order. In visual mode `<A-j>`/`<A-k>` move
+     the whole selection.
+
+    second
+    first
+    third
+
+** Text objects for code (need a treesitter parser, so try them in a C,
+   Rust, Python, ... file). **
+
+    af / if    a function / inside a function     `vaf` selects it
+    ac / ic    a class or struct
+    aa / ia    an argument                         `cia` changes it
+    ai / ii    a conditional (if)
+    al / il    a loop
+    ak / ik    a comment
+    <Space>cx  swap the argument with the next one (<Space>cX: previous)
+
+  6. Open any code file, put the cursor inside a function and try `vaf`,
+     then `daa` on an argument, then `u` to undo.
+
+** Other small helpers. **
+
+    <Space>p (visual)   paste over a selection without losing what you yanked
+    < and > (visual)    indent and keep the selection
+    <C-s>               save from any mode
+    <Space>U            undo tree   (<Space>su: search undo history)
+
+Brackets and quotes close automatically while you type in insert mode.
+
+# Lesson 5: CODE INTELLIGENCE (LSP) *lsp*
+
+** Language servers, completion and formatting work out of the box. **
+
+Open a source file in a language you installed. The status line shows which
+language servers are attached; `<Space>cL` shows details.
+
+    gd          go to definition          K           documentation popup
+    gr          references                gK          signature help
+    gD          declaration               <Space>ca   code action / quick fix
+    gI          implementation            <Space>cr   rename symbol everywhere
+    gy          type definition           <Space>cf   format (also on save)
+    <Space>ci   who calls this function   <Space>cI   what this function calls
+    <Space>co   outline of the file       <Space>ss   jump to a symbol
+    <Space>cd   show the diagnostic on this line
+    <Space>xx   all problems in the project (Trouble)
+
+C / C++ only:
+
+    <Space>ch   switch between header and source
+    <Space>cA   AST view   <Space>cH   type hierarchy
+
+Rust only:
+
+    <Space>ce   explain the error    <Space>cM   expand macro
+    <Space>rR   cargo runnables      <Space>rt   cargo tests
+
+** Completion **
+
+The menu opens while you type. `<Tab>`/`<S-Tab>` or `<C-j>`/`<C-k>` move,
+`<Enter>` accepts, `<C-Space>` opens the menu by hand. Snippets jump between
+fields with `<Tab>`.
+
+NOTE: clangd needs a `compile_commands.json` to understand a C/C++ project.
+      With CMake press `<Space>mg`. With Make run `bear -- make` once.
+
+# Lesson 6: BUILD, RUN AND DEBUG *run*
+
+** `<Space>rr` compiles and runs the current file. **
+
+    <Space>rr   build + run in a terminal at the bottom
+    <Space>rb   build only, errors go to the quickfix list (]q / [q)
+    <Space>rd   build with debug info and start the debugger
+
+It knows C (with AddressSanitizer + UBSan), C++, GAS assembly, Rust (or
+`cargo run` in a Cargo project), Go, Python, Lua, Bash, and Verilog /
+SystemVerilog testbenches (Icarus Verilog).
+
+  1. Make a file `hello.c`: `:e /tmp/hello.c`{vim}, write a `main` that prints
+     something, and press `<Space>rr`. Press `q` to close the output.
+
+** Projects **
+
+    <Space>oo   run a task (make, cargo, npm, just, ...)   <Space>ot  task list
+    <Space>mg   CMake configure   <Space>mb  build   <Space>mr  run
+    <Space>md   CMake debug       <Space>mt  choose target
+
+** Debugger **
+
+    F5          start / continue          F9          toggle breakpoint
+    F10         step over                 F11         step into
+    F12         step out                  <Space>dC   run to cursor
+    <Space>du   toggle debug UI           <Space>de   evaluate expression
+    <Space>dB   conditional breakpoint    <Space>dt   stop
+
+A `.vscode/launch.json` in your project is picked up automatically. There is
+also a "gdb: remote target" configuration for embedded boards (OpenOCD,
+QEMU `-s -S`).
+
+# Lesson 7: GIT *git*
+
+    <Space>gg    lazygit (full git UI in a floating window)
+    ]h  [h       next / previous changed hunk
+    <Space>ghp   preview the hunk     <Space>ghs  stage it   <Space>ghr  reset it
+    <Space>ghb   blame this line      <Space>ub   toggle inline blame
+    <Space>gd    diff view of all changes      <Space>gH  history of this file
+    <Space>gs    git status picker    <Space>gB   open the line on GitHub
+
+# Lesson 8: WINDOWS, BUFFERS AND TERMINAL *windows*
+
+    <C-h/j/k/l>       move between windows
+    <Space>|  <Space>-   split right / split below
+    <Space>wd         close window      <Space>wo  close all others
+    <C-arrows>        resize
+    <S-h>  <S-l>      previous / next buffer (the tabs at the top)
+    <Space>bd         close buffer      <Space>bo  close all other buffers
+    <Space>bb         switch to the last buffer
+    <C-/>             toggle a terminal; `<Esc><Esc>` leaves terminal mode
+
+  1. Press `<Space>|` to split, `<C-l>` / `<C-h>` to move, `<Space>wd` to close.
+
+# Lesson 9: TOGGLES AND SESSIONS *toggles*
+
+Everything under `<Space>u` switches something on or off:
+
+    <Space>uf   format on save          <Space>uh  inlay hints
+    <Space>ud   diagnostics             <Space>uw  line wrap
+    <Space>us   spell checking          <Space>uC  pick a colour scheme
+    <Space>z    zen mode                <Space>n   notification history
+
+Sessions are saved automatically per folder. `<Space>qs` restores the last
+session of the current folder, `<Space>qS` lets you pick one, `<Space>qq`
+quits everything.
+
+# Lesson 10: MAKING IT YOURS *custom*
+
+Your personal changes live in `lua/custom/` inside the config folder
+(`:lua print(vim.fn.stdpath("config"))`{vim}). That folder is ignored by git, so
+`git pull` never conflicts with it.
+
+    lua/custom/languages.lua   which languages get servers, parsers, plugins
+    lua/custom/init.lua        your options, keymaps and autocommands
+    lua/custom/plugins/*.lua   extra plugins, or overrides of existing ones
+
+Example `lua/custom/init.lua`:
+~~~ lua
+vim.opt.relativenumber = false
+vim.keymap.set("n", "<leader>W", "<cmd>wa<cr>", { desc = "Save all" })
+~~~
+
+Example `lua/custom/plugins/theme.lua`:
+~~~ lua
+return {
+  { "catppuccin/nvim", name = "catppuccin", opts = { flavour = "macchiato" } },
+}
+~~~
+
+To change the languages later, edit `lua/custom/languages.lua`, restart
+Neovim and run `:Lazy sync`:
+~~~ lua
+return { "c", "rust", "python" }
+~~~
+
+Available: `c` `asm` `rust` `systemverilog` `vhdl` `python` `go` `bash` `web`.
+
+That's it! Open this tutor again any time with `:Tutor baremetal`{vim} or the
+`T` key on the start screen.
