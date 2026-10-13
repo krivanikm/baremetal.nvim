@@ -1,0 +1,70 @@
+{%- if page.lang == "sk" -%}
+  {%- assign sk = true -%}
+  {%- assign root = "/sk/" -%}
+  {%- assign other = page.url | remove_first: "/sk" -%}
+{%- else -%}
+  {%- assign sk = false -%}
+  {%- assign root = "/" -%}
+  {%- assign other = page.url | prepend: "/sk" -%}
+{%- endif -%}
+<!doctype html>
+<html lang="{% if sk %}sk{% else %}en{% endif %}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ page.title }} · baremetal.nvim</title>
+  <meta name="description" content="{{ site.description }}">
+  <link rel="alternate" hreflang="{% if sk %}en{% else %}sk{% endif %}" href="{{ other | relative_url }}">
+  <link rel="stylesheet" href="{{ '/assets/css/docs.css' | relative_url }}?v=1.0">
+</head>
+<body>
+  <header class="nav">
+    <a class="brand" href="https://krivanikm.github.io/">
+      <span class="dot"></span>
+      <span>matus<span class="mute">.krivanik</span></span>
+    </a>
+    <span class="crumb">/ <a href="{{ root | relative_url }}">baremetal.nvim</a></span>
+    <div class="lang-switch">
+      {%- if sk -%}
+      <span class="on">SK</span><a href="{{ other | relative_url }}">EN</a>
+      {%- else -%}
+      <a href="{{ other | relative_url }}">SK</a><span class="on">EN</span>
+      {%- endif -%}
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="side">
+      <div class="kicker">{% if sk %}dokumentácia{% else %}documentation{% endif %}</div>
+      <nav>
+        {%- if sk -%}
+          {%- assign items = "index:Úvod,install:Inštalácia,languages:Jazyky,running:Spúšťanie a debug,keymaps:Skratky,customization:Prispôsobenie" | split: "," -%}
+        {%- else -%}
+          {%- assign items = "index:Home,install:Installation,languages:Languages,running:Run & debug,keymaps:Keymaps,customization:Customization" | split: "," -%}
+        {%- endif -%}
+        {%- for item in items -%}
+          {%- assign parts = item | split: ":" -%}
+          {%- if parts[0] == "index" -%}
+            {%- assign href = root -%}
+          {%- else -%}
+            {%- assign href = root | append: parts[0] | append: ".html" -%}
+          {%- endif -%}
+          <a href="{{ href | relative_url }}"{% if page.url == href %} class="active"{% endif %}><span class="n">{{ forloop.index0 | prepend: "0" }}</span>{{ parts[1] }}</a>
+        {%- endfor -%}
+      </nav>
+      <div class="side-links">
+        <a href="https://github.com/krivanikm/baremetal.nvim">github →</a>
+      </div>
+    </aside>
+
+    <main class="doc">
+      {{ content }}
+    </main>
+  </div>
+
+  <footer>
+    <div>© 2026 Matúš Krivánik — baremetal.nvim</div>
+    <div class="mute">MIT</div>
+  </footer>
+</body>
+</html>

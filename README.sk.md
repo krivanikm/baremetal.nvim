@@ -8,7 +8,7 @@
 Postavené na `lazy.nvim` a natívnom LSP API z Neovimu 0.11+.
 Vyberieš si len jazyky, ktoré potrebuješ, a inštalátor nastaví zvyšok.
 
-[Screenshoty](#screenshoty) · [Inštalácia](#inštalácia) · [Jazyky](#jazyky) · [Skratky](docs/keymaps.md) · [Prispôsobenie](docs/customization.md) · [Tutor](#tutor) · [English](README.md)
+**[Dokumentácia](https://krivanikm.github.io/baremetal.nvim/sk/)** · [Screenshoty](#screenshoty) · [Inštalácia](#inštalácia) · [Jazyky](#jazyky) · [Skratky](docs/keymaps.md) · [Prispôsobenie](docs/customization.md) · [Tutor](#tutor) · [English](README.md)
 
 </div>
 

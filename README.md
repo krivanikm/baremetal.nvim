@@ -8,7 +8,7 @@
 Built on `lazy.nvim` and the native LSP API of Neovim 0.11+.
 Pick only the languages you need, and the installer sets up the rest.
 
-[Screenshots](#screenshots) · [Install](#install) · [Languages](#languages) · [Keymaps](docs/keymaps.md) · [Customize](docs/customization.md) · [Tutor](#tutor) · [Slovensky](README.sk.md)
+**[Documentation](https://krivanikm.github.io/baremetal.nvim/)** · [Screenshots](#screenshots) · [Install](#install) · [Languages](#languages) · [Keymaps](docs/keymaps.md) · [Customize](docs/customization.md) · [Tutor](#tutor) · [Slovensky](README.sk.md)
 
 </div>
 

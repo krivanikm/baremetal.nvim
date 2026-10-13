@@ -192,7 +192,7 @@ What `<Space>rr` does per filetype:
 | C++ | `g++ -std=c++23 -g -O0 -Wall -Wextra -fsanitize=address,undefined` |
 | GAS asm | `gcc -g -no-pie` (adds `-nostartfiles` if the file defines `_start`) |
 | Rust | `cargo run` inside a Cargo project, otherwise `rustc -g --edition 2024` |
-| SystemVerilog / Verilog | `iverilog -g2012` / `-g2005`, then `vvp` |
+| SystemVerilog / Verilog | `iverilog -g2012` over the project files, then `vvp` (see [Run & debug](running.md)) |
 | Go / Python / Lua / Bash | `go run` / `python3` / `lua` / `bash` |
 
 ## CMake

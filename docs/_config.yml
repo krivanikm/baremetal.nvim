@@ -1,0 +1,11 @@
+title: baremetal.nvim
+description: A batteries-included Neovim config for low-level and hardware work
+url: https://krivanikm.github.io
+baseurl: /baremetal.nvim
+lang: en
+markdown: kramdown
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: default
