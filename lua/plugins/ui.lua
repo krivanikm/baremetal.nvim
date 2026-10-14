@@ -116,7 +116,16 @@ return {
       { "<leader>sS", function() Snacks.picker.lsp_workspace_symbols() end, desc = "LSP workspace symbols" },
       { "<leader>st", function() Snacks.picker.todo_comments() end, desc = "TODO" },
       -- Git
-      { "<leader>gg", function() Snacks.lazygit() end, desc = "Lazygit" },
+      {
+        "<leader>gg",
+        function()
+          if vim.fn.executable("lazygit") == 0 then
+            return vim.notify("lazygit is not installed (it is in install.sh, or use your package manager)", vim.log.levels.WARN)
+          end
+          Snacks.lazygit()
+        end,
+        desc = "Lazygit",
+      },
       { "<leader>gl", function() Snacks.picker.git_log() end, desc = "Git log" },
       { "<leader>gf", function() Snacks.picker.git_log_file() end, desc = "Git log (file)" },
       { "<leader>gs", function() Snacks.picker.git_status() end, desc = "Git status" },

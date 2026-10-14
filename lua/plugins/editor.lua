@@ -53,6 +53,32 @@ return {
     "folke/flash.nvim",
     event = "VeryLazy",
     opts = { modes = { char = { jump_labels = true } } },
+    config = function(_, opts)
+      require("flash").setup(opts)
+      if vim.fn.has("nvim-0.13") == 0 then
+        return
+      end
+      local ffi = require("ffi")
+      pcall(ffi.cdef, "unsigned int search_match_lines; int search_match_endcol;")
+      if not pcall(function() return ffi.C.search_match_lines end) then
+        return
+      end
+      local Hacks = require("flash.hacks")
+      local Pos = require("flash.search.pos")
+      local saved = {}
+      Hacks.get_end_pos = function(from)
+        local ret = Pos({ from[1] + ffi.C.search_match_lines, math.max(0, ffi.C.search_match_endcol - 1) })
+        local line = vim.api.nvim_buf_get_lines(0, ret[1] - 1, ret[1], false)[1]
+        ret[2] = vim.fn.byteidx(line, vim.fn.charidx(line, ret[2]))
+        return ret
+      end
+      Hacks.save_incsearch_state = function()
+        saved.lines, saved.endcol = ffi.C.search_match_lines, ffi.C.search_match_endcol
+      end
+      Hacks.restore_incsearch_state = function()
+        ffi.C.search_match_lines, ffi.C.search_match_endcol = saved.lines, saved.endcol
+      end
+    end,
     keys = {
       { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
       { "S", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash treesitter" },
