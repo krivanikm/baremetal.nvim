@@ -35,7 +35,10 @@ return {
       },
       cmdline = {
         keymap = { preset = "inherit", ["<CR>"] = { "accept_and_enter", "fallback" } },
-        completion = { menu = { auto_show = true } },
+        completion = {
+          menu = { auto_show = true },
+          list = { selection = { preselect = false, auto_insert = false } },
+        },
       },
       fuzzy = { implementation = "prefer_rust_with_warning" },
     },
