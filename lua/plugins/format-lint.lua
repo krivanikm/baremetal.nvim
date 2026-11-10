@@ -50,6 +50,10 @@ return {
         if not vim.g.autoformat or vim.b[buf].autoformat == false then
           return nil
         end
+        local name = vim.api.nvim_buf_get_name(buf)
+        if name ~= "" and vim.fs.find(".noformat", { path = vim.fs.dirname(name), upward = true })[1] then
+          return nil
+        end
         return { timeout_ms = 1500 }
       end,
       formatters = {

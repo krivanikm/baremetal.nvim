@@ -56,7 +56,7 @@ au("FileType", {
 -- Per-language indentation (guess-indent overrides it based on file contents)
 au("FileType", {
   group = augroup("indent"),
-  pattern = { "lua", "verilog", "systemverilog", "json", "yaml", "toml", "html", "css", "javascript", "typescript" },
+  pattern = { "lua", "verilog", "systemverilog", "json", "yaml", "toml", "html", "css", "javascript", "typescript", "c", "cpp" },
   callback = function()
     vim.opt_local.shiftwidth = 2
     vim.opt_local.tabstop = 2
